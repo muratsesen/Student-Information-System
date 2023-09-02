@@ -1,0 +1,21 @@
+﻿<Properties StartupConfiguration="{63FD14BD-C6D4-4272-B64F-B7BC0EB67CF7}|https">
+  <MonoDevelop.Ide.ItemProperties.Api PreferredExecutionTarget="/Applications/Opera.app" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.MVC PreferredExecutionTarget="/Applications/Opera.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="STUDENTINFORMATIONSYSTEM" expanded="True">
+            <Node name="Api" expanded="True" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+</Properties>
