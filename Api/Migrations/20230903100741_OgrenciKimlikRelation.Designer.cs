@@ -3,6 +3,7 @@ using System;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230903100741_OgrenciKimlikRelation")]
+    partial class OgrenciKimlikRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,11 +128,6 @@ namespace Api.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("ID");
-
-                    b.HasAlternateKey("OGR_ID", "DERS_ID")
-                        .HasName("UQ_DersKayit");
-
-                    b.HasIndex("DERS_ID");
 
                     b.ToTable("DERS_KAYIT");
 
@@ -361,7 +359,7 @@ namespace Api.Migrations
                             ID = 1,
                             KIMLIK_ID = 1,
                             KULLANICI_ADI = "hasan.ersoy",
-                            SIFRE = "$2b$12$PTIzyNajUtEEaduDaxrh7uBJpPhBC86iaAueJmR2yfsYqFLGulhwK",
+                            SIFRE = "$2b$12$wPcCAt3DIZvvj1iPQ1Fg8OGL.cuG3IxjqWpYWmOB11MCoa43V7ndW",
                             TUR = 0
                         },
                         new
@@ -369,7 +367,7 @@ namespace Api.Migrations
                             ID = 2,
                             KIMLIK_ID = 2,
                             KULLANICI_ADI = "mehmet.yilmaz",
-                            SIFRE = "$2b$12$ljiuktI1hJXKyMj0DVSIyOluv5ADOs4PvCT8Yb.Zkh2JNmt.23SRu",
+                            SIFRE = "$2b$12$lyvk/ahlbt1pJvN82Um1TOoTtN7CdqGZTKMM93MNS/MpPLqLD4Yni",
                             TUR = 1
                         },
                         new
@@ -377,7 +375,7 @@ namespace Api.Migrations
                             ID = 3,
                             KIMLIK_ID = 3,
                             KULLANICI_ADI = "ahmet.unal",
-                            SIFRE = "$2b$12$kKv1E4wx8XkFtEZEOoDGYOB.Y4Ol.P6H0.Cj7NVYDR8Ql68NAdgtS",
+                            SIFRE = "$2b$12$y9rBsq1VPCHw8hS7KwBKyOmDkK58Pbc4vc8Uhqd7oWz4eZH8.uoYi",
                             TUR = 1
                         },
                         new
@@ -385,7 +383,7 @@ namespace Api.Migrations
                             ID = 4,
                             KIMLIK_ID = 4,
                             KULLANICI_ADI = "mustafa.isik",
-                            SIFRE = "$2b$12$0.wxRjYhnMdzXUyKTAQVMO45GH68aasvQpXU7.5Vxji2RcdCifmWq",
+                            SIFRE = "$2b$12$4qKfgjOV1ER3y9OsG7ACsefLMOzvzHR7zdpGA2TLUkxZI06t3GRfG",
                             TUR = 1
                         },
                         new
@@ -393,7 +391,7 @@ namespace Api.Migrations
                             ID = 5,
                             KIMLIK_ID = 5,
                             KULLANICI_ADI = "ayse.erdogan",
-                            SIFRE = "$2b$12$DA9dhYd4VToAaWH5cW9zqe4sTtHQBz2O/Qgff4iL17JW54tZ67j9G",
+                            SIFRE = "$2b$12$n1RlD9E8BxzAUKYT0Lq5veKFcv/mkEQaxGi2DawbiJMfmV9WrsK4K",
                             TUR = 1
                         },
                         new
@@ -401,7 +399,7 @@ namespace Api.Migrations
                             ID = 6,
                             KIMLIK_ID = 6,
                             KULLANICI_ADI = "fatma.korkmaz",
-                            SIFRE = "$2b$12$KTbFgzEApgjmZx8KDWABeur2PDgwxh.wErGBZ7D6oIuZ7qVkPDN0q",
+                            SIFRE = "$2b$12$tcCqBxfeIZDWVf1ovUL87OiMjIv0/gUYPm..4oBRzXATH29jrp82G",
                             TUR = 1
                         });
                 });
@@ -613,25 +611,6 @@ namespace Api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Api.Data.Models.DERS_KAYIT", b =>
-                {
-                    b.HasOne("Api.Data.Models.DERS", "DERS")
-                        .WithMany("DERS_KAYITLARI")
-                        .HasForeignKey("DERS_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Data.Models.OGRENCI", "OGRENCI")
-                        .WithMany("DERS_KAYITLARI")
-                        .HasForeignKey("OGR_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DERS");
-
-                    b.Navigation("OGRENCI");
-                });
-
             modelBuilder.Entity("Api.Data.Models.ILETISIM", b =>
                 {
                     b.HasOne("Api.Data.Models.KIMLIK", null)
@@ -690,8 +669,6 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Data.Models.DERS", b =>
                 {
-                    b.Navigation("DERS_KAYITLARI");
-
                     b.Navigation("MUFREDAT_DERSLERs");
                 });
 
@@ -712,11 +689,6 @@ namespace Api.Migrations
                     b.Navigation("MUFREDAT_DERSLER");
 
                     b.Navigation("OGRENCILER");
-                });
-
-            modelBuilder.Entity("Api.Data.Models.OGRENCI", b =>
-                {
-                    b.Navigation("DERS_KAYITLARI");
                 });
 #pragma warning restore 612, 618
         }

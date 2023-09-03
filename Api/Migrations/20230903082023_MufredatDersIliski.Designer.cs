@@ -3,6 +3,7 @@ using System;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230903082023_MufredatDersIliski")]
+    partial class MufredatDersIliski
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,11 +129,6 @@ namespace Api.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasAlternateKey("OGR_ID", "DERS_ID")
-                        .HasName("UQ_DersKayit");
-
-                    b.HasIndex("DERS_ID");
-
                     b.ToTable("DERS_KAYIT");
 
                     b.HasData(
@@ -153,7 +151,10 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Data.Models.ILETISIM", b =>
                 {
                     b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("ADRES")
                         .IsRequired()
@@ -239,7 +240,10 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Data.Models.KIMLIK", b =>
                 {
                     b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("AD")
                         .IsRequired()
@@ -361,7 +365,7 @@ namespace Api.Migrations
                             ID = 1,
                             KIMLIK_ID = 1,
                             KULLANICI_ADI = "hasan.ersoy",
-                            SIFRE = "$2b$12$PTIzyNajUtEEaduDaxrh7uBJpPhBC86iaAueJmR2yfsYqFLGulhwK",
+                            SIFRE = "$2b$12$OT0cEACtEvbguEu8.s.6Uuu.sK1C0MXcDiil5pvnSw1e6Kn0nSiyi",
                             TUR = 0
                         },
                         new
@@ -369,7 +373,7 @@ namespace Api.Migrations
                             ID = 2,
                             KIMLIK_ID = 2,
                             KULLANICI_ADI = "mehmet.yilmaz",
-                            SIFRE = "$2b$12$ljiuktI1hJXKyMj0DVSIyOluv5ADOs4PvCT8Yb.Zkh2JNmt.23SRu",
+                            SIFRE = "$2b$12$FlVTOE5NlkV5Yoy915xgMeHu3Ht96tllywnxhg9ba.zlq67KTWTC6",
                             TUR = 1
                         },
                         new
@@ -377,7 +381,7 @@ namespace Api.Migrations
                             ID = 3,
                             KIMLIK_ID = 3,
                             KULLANICI_ADI = "ahmet.unal",
-                            SIFRE = "$2b$12$kKv1E4wx8XkFtEZEOoDGYOB.Y4Ol.P6H0.Cj7NVYDR8Ql68NAdgtS",
+                            SIFRE = "$2b$12$UpQS0hL.q3DG9R4csmvmzOCC8LhIrfQj77/XgCiIwqtGPcRaCzyDa",
                             TUR = 1
                         },
                         new
@@ -385,7 +389,7 @@ namespace Api.Migrations
                             ID = 4,
                             KIMLIK_ID = 4,
                             KULLANICI_ADI = "mustafa.isik",
-                            SIFRE = "$2b$12$0.wxRjYhnMdzXUyKTAQVMO45GH68aasvQpXU7.5Vxji2RcdCifmWq",
+                            SIFRE = "$2b$12$m1vXmADnURuKELVuY14ZtOyMgdP74kZtZXP.MzdG17uyWIdJeO.h.",
                             TUR = 1
                         },
                         new
@@ -393,7 +397,7 @@ namespace Api.Migrations
                             ID = 5,
                             KIMLIK_ID = 5,
                             KULLANICI_ADI = "ayse.erdogan",
-                            SIFRE = "$2b$12$DA9dhYd4VToAaWH5cW9zqe4sTtHQBz2O/Qgff4iL17JW54tZ67j9G",
+                            SIFRE = "$2b$12$a9O456JY/AL4jkwTUl/nEuJizrM6rqaXfj8rY3XVGBrVKlCDsLvGi",
                             TUR = 1
                         },
                         new
@@ -401,7 +405,7 @@ namespace Api.Migrations
                             ID = 6,
                             KIMLIK_ID = 6,
                             KULLANICI_ADI = "fatma.korkmaz",
-                            SIFRE = "$2b$12$KTbFgzEApgjmZx8KDWABeur2PDgwxh.wErGBZ7D6oIuZ7qVkPDN0q",
+                            SIFRE = "$2b$12$ZkciXLmX.pM6rNJ1ZN3ZBO.JGiPOZRhG2x4ljCqT4xYSMxSW5H38y",
                             TUR = 1
                         });
                 });
@@ -448,7 +452,13 @@ namespace Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
+                    b.Property<int>("DERSID")
+                        .HasColumnType("integer");
+
                     b.Property<int>("DERS_ID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MUFREDATID")
                         .HasColumnType("integer");
 
                     b.Property<int>("MUFREDAT_ID")
@@ -456,97 +466,11 @@ namespace Api.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DERS_ID");
+                    b.HasIndex("DERSID");
 
-                    b.HasIndex("MUFREDAT_ID");
+                    b.HasIndex("MUFREDATID");
 
                     b.ToTable("MUFREDAT_DERSLER");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            DERS_ID = 2,
-                            MUFREDAT_ID = 1
-                        },
-                        new
-                        {
-                            ID = 2,
-                            DERS_ID = 5,
-                            MUFREDAT_ID = 1
-                        },
-                        new
-                        {
-                            ID = 3,
-                            DERS_ID = 6,
-                            MUFREDAT_ID = 1
-                        },
-                        new
-                        {
-                            ID = 4,
-                            DERS_ID = 7,
-                            MUFREDAT_ID = 1
-                        },
-                        new
-                        {
-                            ID = 5,
-                            DERS_ID = 1,
-                            MUFREDAT_ID = 2
-                        },
-                        new
-                        {
-                            ID = 6,
-                            DERS_ID = 2,
-                            MUFREDAT_ID = 2
-                        },
-                        new
-                        {
-                            ID = 7,
-                            DERS_ID = 3,
-                            MUFREDAT_ID = 2
-                        },
-                        new
-                        {
-                            ID = 8,
-                            DERS_ID = 4,
-                            MUFREDAT_ID = 2
-                        },
-                        new
-                        {
-                            ID = 9,
-                            DERS_ID = 6,
-                            MUFREDAT_ID = 2
-                        },
-                        new
-                        {
-                            ID = 10,
-                            DERS_ID = 7,
-                            MUFREDAT_ID = 2
-                        },
-                        new
-                        {
-                            ID = 11,
-                            DERS_ID = 1,
-                            MUFREDAT_ID = 3
-                        },
-                        new
-                        {
-                            ID = 12,
-                            DERS_ID = 4,
-                            MUFREDAT_ID = 3
-                        },
-                        new
-                        {
-                            ID = 13,
-                            DERS_ID = 5,
-                            MUFREDAT_ID = 3
-                        },
-                        new
-                        {
-                            ID = 14,
-                            DERS_ID = 6,
-                            MUFREDAT_ID = 3
-                        });
                 });
 
             modelBuilder.Entity("Api.Data.Models.OGRENCI", b =>
@@ -568,99 +492,22 @@ namespace Api.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("KIMLIK_ID")
-                        .IsUnique();
-
                     b.HasIndex("MUFREDAT_ID");
 
                     b.ToTable("OGRENCILER");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            KIMLIK_ID = 3,
-                            MUFREDAT_ID = 1,
-                            OGR_NO = 27482379
-                        },
-                        new
-                        {
-                            ID = 2,
-                            KIMLIK_ID = 5,
-                            MUFREDAT_ID = 1,
-                            OGR_NO = 23462368
-                        },
-                        new
-                        {
-                            ID = 3,
-                            KIMLIK_ID = 6,
-                            MUFREDAT_ID = 2,
-                            OGR_NO = 34565479
-                        },
-                        new
-                        {
-                            ID = 4,
-                            KIMLIK_ID = 2,
-                            MUFREDAT_ID = 2,
-                            OGR_NO = 53456346
-                        },
-                        new
-                        {
-                            ID = 5,
-                            KIMLIK_ID = 4,
-                            MUFREDAT_ID = 3,
-                            OGR_NO = 34674575
-                        });
-                });
-
-            modelBuilder.Entity("Api.Data.Models.DERS_KAYIT", b =>
-                {
-                    b.HasOne("Api.Data.Models.DERS", "DERS")
-                        .WithMany("DERS_KAYITLARI")
-                        .HasForeignKey("DERS_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Data.Models.OGRENCI", "OGRENCI")
-                        .WithMany("DERS_KAYITLARI")
-                        .HasForeignKey("OGR_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DERS");
-
-                    b.Navigation("OGRENCI");
-                });
-
-            modelBuilder.Entity("Api.Data.Models.ILETISIM", b =>
-                {
-                    b.HasOne("Api.Data.Models.KIMLIK", null)
-                        .WithOne("ILETISIM")
-                        .HasForeignKey("Api.Data.Models.ILETISIM", "ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Api.Data.Models.KIMLIK", b =>
-                {
-                    b.HasOne("Api.Data.Models.KULLANICI", null)
-                        .WithOne("KIMLIK")
-                        .HasForeignKey("Api.Data.Models.KIMLIK", "ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Api.Data.Models.MUFREDAT_DERSLER", b =>
                 {
                     b.HasOne("Api.Data.Models.DERS", "DERS")
-                        .WithMany("MUFREDAT_DERSLERs")
-                        .HasForeignKey("DERS_ID")
+                        .WithMany()
+                        .HasForeignKey("DERSID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Api.Data.Models.MUFREDAT", "MUFREDAT")
-                        .WithMany("MUFREDAT_DERSLER")
-                        .HasForeignKey("MUFREDAT_ID")
+                        .WithMany()
+                        .HasForeignKey("MUFREDATID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -671,52 +518,18 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Data.Models.OGRENCI", b =>
                 {
-                    b.HasOne("Api.Data.Models.KIMLIK", "KIMLIK")
-                        .WithOne()
-                        .HasForeignKey("Api.Data.Models.OGRENCI", "KIMLIK_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Api.Data.Models.MUFREDAT", "MUFREDAT")
                         .WithMany("OGRENCILER")
                         .HasForeignKey("MUFREDAT_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("KIMLIK");
-
                     b.Navigation("MUFREDAT");
-                });
-
-            modelBuilder.Entity("Api.Data.Models.DERS", b =>
-                {
-                    b.Navigation("DERS_KAYITLARI");
-
-                    b.Navigation("MUFREDAT_DERSLERs");
-                });
-
-            modelBuilder.Entity("Api.Data.Models.KIMLIK", b =>
-                {
-                    b.Navigation("ILETISIM")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Api.Data.Models.KULLANICI", b =>
-                {
-                    b.Navigation("KIMLIK")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Api.Data.Models.MUFREDAT", b =>
                 {
-                    b.Navigation("MUFREDAT_DERSLER");
-
                     b.Navigation("OGRENCILER");
-                });
-
-            modelBuilder.Entity("Api.Data.Models.OGRENCI", b =>
-                {
-                    b.Navigation("DERS_KAYITLARI");
                 });
 #pragma warning restore 612, 618
         }

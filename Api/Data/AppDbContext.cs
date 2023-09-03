@@ -13,8 +13,8 @@ namespace Api.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            //AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
         //public DbSet<User> Users { get; set; }
@@ -33,6 +33,64 @@ namespace Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OGRENCI>()
+                .HasOne(o => o.MUFREDAT)
+                .WithMany(m => m.OGRENCILER).HasForeignKey(p => p.MUFREDAT_ID);
+
+            modelBuilder.Entity<MUFREDAT>()
+                .HasMany(m => m.MUFREDAT_DERSLER)
+                .WithOne(md => md.MUFREDAT)
+                .HasForeignKey(md => md.MUFREDAT_ID);
+
+            modelBuilder.Entity<DERS>()
+                .HasMany(d => d.MUFREDAT_DERSLERs)
+                .WithOne(md => md.DERS)
+                .HasForeignKey(md => md.DERS_ID);
+
+            modelBuilder.Entity<MUFREDAT_DERSLER>()
+                .HasOne(md => md.MUFREDAT)
+                .WithMany(m => m.MUFREDAT_DERSLER)
+                .HasForeignKey(md => md.MUFREDAT_ID);
+
+            modelBuilder.Entity<MUFREDAT_DERSLER>()
+                .HasOne(md => md.DERS)
+                .WithMany(d => d.MUFREDAT_DERSLERs)
+                .HasForeignKey(md => md.DERS_ID);
+
+            modelBuilder.Entity<KULLANICI>()
+                .HasOne(k => k.KIMLIK)
+                .WithOne()
+                .HasForeignKey<KIMLIK>(k => k.ID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<KIMLIK>()
+                .HasOne(k => k.ILETISIM)
+                .WithOne()
+                .HasForeignKey<ILETISIM>(i => i.ID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OGRENCI>()
+                .HasOne(o => o.KIMLIK)
+                .WithOne()
+                .HasForeignKey<OGRENCI>(k => k.KIMLIK_ID);
+
+            //Bir öğrencinin bir derse sadece bir kere kayıt olmasını kontrol eder.
+            modelBuilder.Entity<DERS_KAYIT>()
+                        .HasAlternateKey(r => new { r.OGR_ID, r.DERS_ID })
+                        .HasName("UQ_DersKayit");
+
+            modelBuilder.Entity<DERS_KAYIT>()
+                .HasOne(dk => dk.OGRENCI)
+                .WithMany(o => o.DERS_KAYITLARI)
+                .HasForeignKey(dk => dk.OGR_ID);
+
+            modelBuilder.Entity<DERS_KAYIT>()
+                .HasOne(dk => dk.DERS)
+                .WithMany(d => d.DERS_KAYITLARI)
+                .HasForeignKey(dk => dk.DERS_ID);
+
 
 
             modelBuilder.Entity<OGRENCI>().HasData(

@@ -12,6 +12,6 @@ public class DERS_KAYIT : BaseEntity, IEntity
     public int DERS_ID { get; set; }
     public DateTime CREATED_DATE { get; set; }
 
-    // public List<OGRENCI> OGRENCILER { get; set; }
-    // public List<DERS> DERSLER { get; set; }
+    public OGRENCI OGRENCI { get; set; }
+    public DERS DERS { get; set; }
 }

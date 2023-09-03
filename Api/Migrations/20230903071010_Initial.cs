@@ -30,22 +30,6 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DERSLER",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DERS_KODU = table.Column<string>(type: "text", nullable: false),
-                    DERS_ADI = table.Column<string>(type: "text", nullable: false),
-                    DURUM = table.Column<int>(type: "integer", nullable: false),
-                    KREDI = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DERSLER", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ILETISIMLER",
                 columns: table => new
                 {
@@ -138,18 +122,40 @@ namespace Api.Migrations
                     table.PrimaryKey("PK_OGRENCILER", x => x.ID);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DERSLER",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DERS_KODU = table.Column<string>(type: "text", nullable: false),
+                    DERS_ADI = table.Column<string>(type: "text", nullable: false),
+                    DURUM = table.Column<int>(type: "integer", nullable: false),
+                    KREDI = table.Column<int>(type: "integer", nullable: false),
+                    MUFREDAT_DERSLERID = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DERSLER", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_DERSLER_MUFREDAT_DERSLER_MUFREDAT_DERSLERID",
+                        column: x => x.MUFREDAT_DERSLERID,
+                        principalTable: "MUFREDAT_DERSLER",
+                        principalColumn: "ID");
+                });
+
             migrationBuilder.InsertData(
                 table: "DERSLER",
-                columns: new[] { "ID", "DERS_ADI", "DERS_KODU", "DURUM", "KREDI" },
+                columns: new[] { "ID", "DERS_ADI", "DERS_KODU", "DURUM", "KREDI", "MUFREDAT_DERSLERID" },
                 values: new object[,]
                 {
-                    { 1, "Türk Demokrasi Tarihi", "HUM101", 1, 5 },
-                    { 2, "Calculus 2", "MATH102", 0, 6 },
-                    { 3, "Metalurjiye Giriş", "MATE103", 0, 6 },
-                    { 4, "Grafik Dizayn", "GRA105", 1, 5 },
-                    { 5, "Bilgisayar Teknolojileri", "CMPE201", 1, 4 },
-                    { 6, "İngilizce 2", "ENG102", 1, 4 },
-                    { 7, "İleri Calculus", "MATH201", 1, 6 }
+                    { 1, "Türk Demokrasi Tarihi", "HUM101", 1, 5, null },
+                    { 2, "Calculus 2", "MATH102", 0, 6, null },
+                    { 3, "Metalurjiye Giriş", "MATE103", 0, 6, null },
+                    { 4, "Grafik Dizayn", "GRA105", 1, 5, null },
+                    { 5, "Bilgisayar Teknolojileri", "CMPE201", 1, 4, null },
+                    { 6, "İngilizce 2", "ENG102", 1, 4, null },
+                    { 7, "İleri Calculus", "MATH201", 1, 6, null }
                 });
 
             migrationBuilder.InsertData(
@@ -192,12 +198,12 @@ namespace Api.Migrations
                 columns: new[] { "ID", "KIMLIK_ID", "KULLANICI_ADI", "SIFRE", "TUR" },
                 values: new object[,]
                 {
-                    { 1, 1, "hasan.ersoy", "$2b$12$ATMgLhxYK1nwzebAksGecuBGZ2C4wa6uH10Dqgl605ePj.JN89lh.", 0 },
-                    { 2, 2, "mehmet.yilmaz", "$2b$12$c7WIyeB.vwUKJZYzdIRgyejsR2UlKqSjXwLIN/nwLnuF.DbfYTJGW", 1 },
-                    { 3, 3, "ahmet.unal", "$2b$12$Ad7.i3ql4/SlChQviJ950.oh5fXD5SoUswbjwroRwU61Qv0JZpQT2", 1 },
-                    { 4, 4, "mustafa.isik", "$2b$12$KZfgl.tfckas3PgRQ7zki.n63deohHwdu1yuK4ixk1u9oD0giPtA6", 1 },
-                    { 5, 5, "ayse.erdogan", "$2b$12$a7a5Kg4icQ.DOE5oUiDkyutlNQHcGnWjfaAXcgwtLvcbXasluH5/m", 1 },
-                    { 6, 6, "fatma.korkmaz", "$2b$12$ZIQv7fQp0Birtr6rxZS3mem8WTWS576l1Y.LplsvXIAbKquA5FA9m", 1 }
+                    { 1, 1, "hasan.ersoy", "$2b$12$3m3GSlgPye82PSh17RssBORWjzBPfq9h78AUyR8UMA86QgkNOvlW.", 0 },
+                    { 2, 2, "mehmet.yilmaz", "$2b$12$RnNuXQMTn9PDyxv73AD9YuRdqoqut3YxZ73e/m/5Ke6zw7FC9IwxG", 1 },
+                    { 3, 3, "ahmet.unal", "$2b$12$QpVNcKcsWBBkaRTcg30vsOJhGjFF0VplH/mOLUQJtpxnb8.0T7CSG", 1 },
+                    { 4, 4, "mustafa.isik", "$2b$12$yblH0TfXNSK8NigbmcYzReSW8aWIRobWICX1kh4si7roY8Ac6ojZe", 1 },
+                    { 5, 5, "ayse.erdogan", "$2b$12$XccFAomJ63O4dDP3NVRGBO00EmD0UW0GBKHHj7L8cdTQVt7I6aw02", 1 },
+                    { 6, 6, "fatma.korkmaz", "$2b$12$WKoYKfwMEwATv7ghvCSgmO05cEm.2nYmN7RK2drJT25lbkFaMI7li", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -242,6 +248,11 @@ namespace Api.Migrations
                     { 4, 2, 2, 53456346 },
                     { 5, 4, 3, 34674575 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DERSLER_MUFREDAT_DERSLERID",
+                table: "DERSLER",
+                column: "MUFREDAT_DERSLERID");
         }
 
         /// <inheritdoc />
@@ -263,13 +274,13 @@ namespace Api.Migrations
                 name: "KULLANICILAR");
 
             migrationBuilder.DropTable(
-                name: "MUFREDAT_DERSLER");
-
-            migrationBuilder.DropTable(
                 name: "MUFREDATLAR");
 
             migrationBuilder.DropTable(
                 name: "OGRENCILER");
+
+            migrationBuilder.DropTable(
+                name: "MUFREDAT_DERSLER");
         }
     }
 }

@@ -25,6 +25,7 @@ builder.Services.AddScoped<IRepository<ILETISIM>, IletisimRepo>();
 builder.Services.AddScoped<IRepository<MUFREDAT>, MufredatRepo>();
 builder.Services.AddScoped<IRepository<DERS>, DersRepo>();
 builder.Services.AddScoped<IRepository<KULLANICI>, KullaniciRepo>();
+builder.Services.AddScoped<IRepository<MUFREDAT_DERSLER>, MufredatDerslerRepo>();
 
 
 builder.Services.AddAuthentication(options =>

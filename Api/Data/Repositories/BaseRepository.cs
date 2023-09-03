@@ -75,15 +75,35 @@ namespace Api.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEntity>> GetListWithIncludeAsync(Expression<Func<TEntity, bool>> expression = null, params Expression<Func<TEntity, object>>[] includeProperties)
+        public async Task<IEnumerable<TEntity>> GetListWithIncludeAsync(Expression<Func<TEntity, bool>> expression = null,
+    params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = Context.Set<TEntity>();
+
+            if (expression != null)
+                query = query.Where(expression);
+
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+            return await query.ToListAsync();
         }
 
-        public Task<IEnumerable<TEntity>> GetListWithIncludeAsync(Expression<Func<TEntity, bool>> expression = null, Expression<Func<TEntity, object>> includeProperties = null)
+        public async Task<IEnumerable<TEntity>> GetListWithIncludeAsync(Expression<Func<TEntity, bool>> expression = null,
+            Expression<Func<TEntity, object>> includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = Context.Set<TEntity>();
+
+            if (expression != null)
+                query = query.Where(expression);
+
+            if (includeProperties != null)
+                query = query.Include(includeProperties);
+
+            // query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+            return await query.ToListAsync();
         }
+
 
         public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> expression = null)
         {
@@ -97,7 +117,7 @@ namespace Api.Data.Repositories
 
         public IQueryable<TEntity> Query()
         {
-            throw new NotImplementedException();
+            return Context.Set<TEntity>();
         }
 
         public Task<int> RemoveRangeAsync(Expression<Func<TEntity, bool>> expression)

@@ -13,10 +13,9 @@ public class KULLANICI : BaseEntity, IEntity
     public string KULLANICI_ADI { get; set; }
     public string SIFRE { get; set; }
     public KULLANICI_TIPI TUR { get; set; }
-    //[ForeignKey("KIMLIK_ID")]
     public int KIMLIK_ID { get; set; }
 
-    //public KIMLIK KIMLIK { get; set; }
+    public KIMLIK KIMLIK { get; set; }
 
     public void SetPassword(string password)
     {

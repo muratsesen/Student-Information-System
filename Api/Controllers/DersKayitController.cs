@@ -8,30 +8,32 @@ using Api.Data.Repositories;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Api.Controllers;
 
 [ApiController]
-[Route("ogrenci")]
+[Route("derskayit")]
 [Authorize]
-public class OgrenciController : ControllerBase
+public class DersKayitController : ControllerBase
 {
 
 
-    private readonly ILogger<OgrenciController> logger;
+    private readonly ILogger<DersKayitController> logger;
     private readonly IRepository<OGRENCI> ogrenciRepo;
     private readonly IRepository<KIMLIK> kimlikRepo;
     private readonly IRepository<ILETISIM> iletisimRepo;
     private readonly IRepository<MUFREDAT> mufredatRepo;
     private readonly IRepository<KULLANICI> kullanciRepo;
+    private readonly IRepository<MUFREDAT_DERSLER> mdRepo;
     private readonly AppDbContext context;
 
-    public OgrenciController(ILogger<OgrenciController> _logger,
+    public DersKayitController(
+        ILogger<DersKayitController> _logger,
         IRepository<OGRENCI> _ogrenciRepo,
         IRepository<KIMLIK> _kimlikRepo,
         IRepository<ILETISIM> _iletisimRepo,
         IRepository<KULLANICI> _kullaniciRepo,
         IRepository<MUFREDAT> _mufredatRepo,
+        IRepository<MUFREDAT_DERSLER> _mdRepo,
         AppDbContext _context
         )
     {
@@ -41,31 +43,40 @@ public class OgrenciController : ControllerBase
         iletisimRepo = _iletisimRepo;
         mufredatRepo = _mufredatRepo;
         kullanciRepo = _kullaniciRepo;
+        mdRepo = _mdRepo;
         context = _context;
     }
 
-    [HttpPost("yeni")]
-    [Authorize(Policy = "AdminRole")]
-    public StudentCreateModel Post(StudentCreateModel model)
+    [HttpPost("kayit")]
+    [Authorize(Policy = "UserRole")]
+    public IActionResult Post(DersKayitModel model)
     {
-        if (model.ILETISIM != null)
+
+        //ders öğrenciye tanımlı müfredatta var mı?
+        //var ogrWithMufredatDers = context.OGRENCILER.Where(s => s.ID == model.OgrenciId).Include(o => o.MUFREDAT).ThenInclude(m => m.MUFREDAT_DERSLER).FirstOrDefault();
+
+        //var ders = ogrWithMufredatDers.MUFREDAT.MUFREDAT_DERSLER.Count(s => s.DERS_ID == model.DersId);
+
+        //if (ders == 0) return BadRequest("Öğrencinin müfredatında bu ders bulunmuyor!");
+
+        bool derseKayitliMi = context.DERS_KAYIT.Any(dk => dk.OGR_ID == model.OgrenciId && dk.DERS_ID == model.DersId);
+
+        if (derseKayitliMi)
         {
-            iletisimRepo.Add(model.ILETISIM);
+            return Ok("Öğrenci derse zaten kayıtlıdır!");
         }
 
-        if (model.KIMLIK != null)
+        var dersKayit = new DERS_KAYIT()
         {
-            model.KIMLIK.ILETISIM_ID = model.ILETISIM.ID;
-            kimlikRepo.Add(model.KIMLIK);
-        }
+            DERS_ID = model.DersId,
+            OGR_ID = model.OgrenciId,
+            CREATED_DATE = DateTime.UtcNow
+        };
 
-        if (model.OGRENCI != null)
-        {
-            model.OGRENCI.KIMLIK_ID = model.KIMLIK.ID;
-            ogrenciRepo.Add(model.OGRENCI);
-        }
+        context.DERS_KAYIT.Add(dersKayit);
+        context.SaveChanges();
 
-        return model;
+        return Ok(dersKayit);
     }
 
     [HttpPut("degistir")]
@@ -90,38 +101,17 @@ public class OgrenciController : ControllerBase
         return model;
     }
 
-    [HttpPut("iletisim")]
-    [Authorize(Roles = "admin,user")]
-    public IActionResult PutIletisim(OgrenciIletisimModel model)
+
+    [HttpGet("dersler/{mufredat_id}")]
+    [Authorize]
+    public async Task<IActionResult> Get(int mufredat_id)
     {
-        var ogr = ogrenciRepo.Get(o => o.ID == model.OGRENCI_ID);
-
-        var kimlik = kimlikRepo.Get(k => k.ID == ogr.KIMLIK_ID);
-
-        var iletisim = iletisimRepo.Get(i => i.ID == kimlik.ILETISIM_ID);
-
-
-        if (model.ILETISIM != null)
-        {
-            iletisim.ADRES = model.ILETISIM.ADRES;
-            iletisim.EMAIL = model.ILETISIM.EMAIL;
-            iletisim.GSM = model.ILETISIM.GSM;
-            iletisim.IL = model.ILETISIM.IL;
-            iletisim.ILCE = model.ILETISIM.ILCE;
-
-            iletisimRepo.Update(iletisim);
-            return Ok();
-        }
-
-        return NotFound();
-
-    }
-
-    [HttpGet("ogrenciler")]
-    [Authorize(Policy = "AdminRole")]
-    public IEnumerable<OGRENCI> Get()
-    {
-        return ogrenciRepo.GetList();
+        // var muf = await mdRepo.GetListWithIncludeAsync(m => m.MUFREDAT_ID == 1, m => m.DERSLER);
+        var mufredatDersler = context.MUFREDAT_DERSLER
+                                    .Where(md => md.MUFREDAT_ID == mufredat_id)
+                                    .Select(md => md.DERS)
+                                    .ToList();
+        return Ok(mufredatDersler);
     }
 
     [HttpGet("ogrenci/{id}")]
@@ -154,64 +144,6 @@ public class OgrenciController : ControllerBase
         return Ok(model);
     }
 
-    [HttpGet("mufredat/{ogrenci_id}")]
-    [Authorize()]
-    public MUFREDAT GetMufredat(int ogrenci_id)
-    {
-        var ogr = ogrenciRepo.Get(ogr => ogr.ID == ogrenci_id);
-
-        if (ogr != null)
-        {
-            return mufredatRepo.Get(m => m.ID == ogr.MUFREDAT_ID);
-        }
-
-        return null;
-    }
-
-    [HttpPost("mufredat")]
-    [Authorize()]
-    public OGRENCI PostMufredat(OgrenciMufredatModel model)
-    {
-        var ogr = ogrenciRepo.Get(ogr => ogr.ID == model.OgrenciId);
-
-        if (ogr != null)
-        {
-            ogr.MUFREDAT_ID = model.MufredatId;
-
-            ogrenciRepo.Update(ogr);
-
-            return ogr;
-        }
-
-        return null;
-    }
-
-    [HttpPut("mufredat-degistir")]
-    [Authorize(Policy = "AdminRole")]
-    public MUFREDAT PutOgrenciMufredat(int ogrenci_id)
-    {
-        var ogr = ogrenciRepo.Get(ogr => ogr.ID == ogrenci_id);
-
-        if (ogr != null)
-        {
-            return mufredatRepo.Get(m => m.ID == ogr.MUFREDAT_ID);
-        }
-
-        return null;
-    }
-
-    [HttpGet("kayitolunan-dersler/{ogrenci_id}")]
-    [Authorize]
-    public IActionResult GetRegisteredLessonsOfAStudent(int ogrenci_id)
-    {
-        var res = context.OGRENCILER.Where(o => o.ID == ogrenci_id)
-            .SelectMany(o => o.DERS_KAYITLARI)
-            .Select(dk => dk.DERS
-                        )
-            .ToList();
-
-        return Ok(res);
-    }
 
 
     private KULLANICI GetUser(int id)

@@ -13,7 +13,7 @@ public class OGRENCI : BaseEntity, IEntity
     // [ForeignKey("MUFREDAT_ID")]
     public int MUFREDAT_ID { get; set; }
 
-    //public KIMLIK KIMLIK { get; set; }
-    // public MUFREDAT MUFREDAT { get; set; }
-    // public List<DERS_KAYIT> DERS_KAYITs { get; set; }
+    public KIMLIK KIMLIK { get; set; }
+    public MUFREDAT MUFREDAT { get; set; }
+    public ICollection<DERS_KAYIT> DERS_KAYITLARI { get; set; }
 }

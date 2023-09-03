@@ -13,5 +13,5 @@ public class KIMLIK : BaseEntity, IEntity
     // [ForeignKey("ILETISIM_ID")]
     public int ILETISIM_ID { get; set; }
 
-    //public ILETISIM ILETISIM { get; set; }
+    public ILETISIM ILETISIM { get; set; }
 }

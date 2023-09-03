@@ -44,6 +44,49 @@ public class AuthController : ControllerBase
         return Unauthorized("Invalid credentials");
     }
 
+    [Authorize]
+    [HttpGet("info")]
+    public IActionResult Info()
+    {
+        try
+        {
+            var user = HttpContext.User;
+
+            var currentUserIdClaim = HttpContext.User.FindFirst(ClaimTypes.GivenName);
+            if (currentUserIdClaim != null && int.TryParse(currentUserIdClaim.Value, out int currentUserId))
+            {
+                var kullanici = _context.KULLANICILAR.Where(k => k.ID == currentUserId).Include(k => k.KIMLIK).ThenInclude(p => p.ILETISIM).FirstOrDefault();
+
+                if (kullanici == null) return NotFound();
+
+                KullaniciBilgiModel model = new KullaniciBilgiModel();
+                model.Adres = kullanici.KIMLIK.ILETISIM.ADRES;
+                model.AdSoyad = kullanici.KIMLIK.AD + " " + kullanici.KIMLIK.SOYAD;
+                model.Kullanici_Adi = kullanici.KULLANICI_ADI;
+                model.TCKN = kullanici.KIMLIK.TC_NO;
+                model.Telefon = kullanici.KIMLIK.ILETISIM.GSM;
+
+                if (kullanici.TUR == KULLANICI_TIPI.USER)
+                {
+                    //Öğrenci id getir
+                    var ogr = _context.OGRENCILER.Where(o => o.KIMLIK_ID == kullanici.KIMLIK_ID)
+                                                 .Select(o => new { Id = o.ID, Mufredat_Id = o.MUFREDAT_ID })
+                                                 .FirstOrDefault();
+                    model.OgrenciId = ogr.Id;
+                    model.MufredatId = ogr.Mufredat_Id;
+                }
+
+                return Ok(model);
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+
+        return NotFound();
+
+    }
+
     private bool IsValidUser(LoginViewModel model, out KULLANICI user, out List<string> roles)
     {
         user = _context.KULLANICILAR.Where(u => u.KULLANICI_ADI == model.KULLANICI_ADI).FirstOrDefault();
@@ -87,5 +130,6 @@ public class AuthController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }
 
