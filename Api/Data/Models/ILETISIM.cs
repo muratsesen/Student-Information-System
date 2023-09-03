@@ -1,6 +1,8 @@
 namespace Api.Data.Models;
+using Api.Data.Repositories.Abstract;
 
-public class ILETISIM : BaseEntity
+
+public class ILETISIM : BaseEntity, IEntity
 {
     public string ADRES { get; set; }
     public string IL { get; set; }

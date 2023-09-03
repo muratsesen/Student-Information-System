@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Api.Services;
 using Microsoft.OpenApi.Models;
+using Api.Data.Repositories;
+using Api.Data.Repositories.Abstract;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,13 @@ var connectionString = builder.Configuration.GetConnectionString("Default");
 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddScoped<IRepository<OGRENCI>, OgrenciRepo>();
+builder.Services.AddScoped<IRepository<KIMLIK>, KimlikRepo>();
+builder.Services.AddScoped<IRepository<ILETISIM>, IletisimRepo>();
+builder.Services.AddScoped<IRepository<MUFREDAT>, MufredatRepo>();
+builder.Services.AddScoped<IRepository<DERS>, DersRepo>();
+builder.Services.AddScoped<IRepository<KULLANICI>, KullaniciRepo>();
+
 
 builder.Services.AddAuthentication(options =>
 {

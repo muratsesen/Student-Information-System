@@ -1,5 +1,8 @@
 namespace Api.Data.Models;
-public class DERS : BaseEntity
+using Api.Data.Repositories.Abstract;
+
+
+public class DERS : BaseEntity, IEntity
 {
     public string DERS_KODU { get; set; }
     public string DERS_ADI { get; set; }

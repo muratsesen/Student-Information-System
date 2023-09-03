@@ -5,10 +5,10 @@ using Api.Data.Repositories.Abstract;
 
 namespace Api.Data.Repositories
 {
-    public class OgrenciRepo : BaseRepository<OGRENCI, AppDbContext>
+    public class MufredatRepo : BaseRepository<MUFREDAT, AppDbContext>
     {
         private readonly AppDbContext context;
-        public OgrenciRepo(AppDbContext dbContext) : base(dbContext)
+        public MufredatRepo(AppDbContext dbContext) : base(dbContext)
         {
             context = dbContext;
         }

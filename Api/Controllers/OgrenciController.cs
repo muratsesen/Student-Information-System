@@ -4,26 +4,29 @@ using Api.Data.Models;
 using Api.Data.Models.ViewModels;
 using Api.Data.Repositories.Abstract;
 using Api.Data.Repositories;
+using System.Security.Claims;
 
 namespace Api.Controllers;
 
 [ApiController]
 [Route("ogrenci")]
 [Authorize]
-public class StudentController : ControllerBase
+public class OgrenciController : ControllerBase
 {
 
 
-    private readonly ILogger<StudentController> logger;
+    private readonly ILogger<OgrenciController> logger;
     private readonly IRepository<OGRENCI> ogrenciRepo;
     private readonly IRepository<KIMLIK> kimlikRepo;
     private readonly IRepository<ILETISIM> iletisimRepo;
     private readonly IRepository<MUFREDAT> mufredatRepo;
+    private readonly IRepository<KULLANICI> kullanciRepo;
 
-    public StudentController(ILogger<StudentController> _logger,
+    public OgrenciController(ILogger<OgrenciController> _logger,
         IRepository<OGRENCI> _ogrenciRepo,
         IRepository<KIMLIK> _kimlikRepo,
         IRepository<ILETISIM> _iletisimRepo,
+        IRepository<KULLANICI> _kullaniciRepo,
         IRepository<MUFREDAT> _mufredatRepo
         )
     {
@@ -32,6 +35,7 @@ public class StudentController : ControllerBase
         kimlikRepo = _kimlikRepo;
         iletisimRepo = _iletisimRepo;
         mufredatRepo = _mufredatRepo;
+        kullanciRepo = _kullaniciRepo;
     }
 
     [HttpPost("yeni")]
@@ -89,8 +93,8 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet("ogrenci/{id}")]
-    [Authorize]
-    public OgrenciViewModel GetById(int id)
+    [Authorize(Roles = "admin,user")]
+    public IActionResult GetById(int id)
     {
         var ogr = ogrenciRepo.Get(ogr => ogr.ID == id);
         var kimlik = kimlikRepo.Get(kml => kml.ID == ogr.KIMLIK_ID);
@@ -101,7 +105,32 @@ public class StudentController : ControllerBase
         model.KIMLIK = kimlik;
         model.OGRENCI = ogr;
 
-        return model;
+        var user = HttpContext.User;
+
+        if (user.IsInRole("admin"))
+        {
+            return Ok(model);
+        }
+
+        var kullanici = GetUser(id);
+
+        if (!IsCurrentUser(kullanici.ID))
+        {
+            return Unauthorized();
+        }
+
+        return Ok(model);
+    }
+
+    private KULLANICI GetUser(int id)
+    {
+        var ogr = ogrenciRepo.Get(o => o.ID == id);
+
+        if (ogr == null)
+        {
+            return null;
+        }
+        return kullanciRepo.Get(k => k.KIMLIK_ID == ogr.KIMLIK_ID);
     }
 
     [HttpGet("mufredat/{ogrenci_id}")]
@@ -117,6 +146,7 @@ public class StudentController : ControllerBase
 
         return null;
     }
+
     [HttpPost("mufredat")]
     [Authorize()]
     public OGRENCI PostMufredat(OgrenciMufredatModel model)
@@ -149,5 +179,18 @@ public class StudentController : ControllerBase
         return null;
     }
 
+
+    private bool IsCurrentUser(int studentId)
+    {
+
+        // var currentUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var currentUserIdClaim = HttpContext.User.FindFirst(ClaimTypes.GivenName);
+        if (currentUserIdClaim != null && int.TryParse(currentUserIdClaim.Value, out int currentUserId))
+        {
+            return currentUserId == studentId;
+        }
+        return false;
+        //return currentUserId == studentId.ToString();
+    }
 }
 

@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
+using Api.Data.Models;
 using Api.Data.Models.Enums;
 namespace Api.Controllers;
 
@@ -32,19 +33,20 @@ public class AuthController : ControllerBase
     public IActionResult Login([FromBody] LoginViewModel model)
     {
         List<string> roles;
+        KULLANICI user;
 
-        if (IsValidUser(model, out roles))
+        if (IsValidUser(model, out user, out roles))
         {
-            var token = GenerateJwtToken(model.KULLANICI_ADI, roles);
+            var token = GenerateJwtToken(user, roles);
             return Ok(new { token });
         }
 
         return Unauthorized("Invalid credentials");
     }
 
-    private bool IsValidUser(LoginViewModel model, out List<string> roles)
+    private bool IsValidUser(LoginViewModel model, out KULLANICI user, out List<string> roles)
     {
-        var user = _context.KULLANICILAR.Where(u => u.KULLANICI_ADI == model.KULLANICI_ADI).FirstOrDefault();
+        user = _context.KULLANICILAR.Where(u => u.KULLANICI_ADI == model.KULLANICI_ADI).FirstOrDefault();
         roles = new List<string>();
         if (user == null) return false;
 
@@ -58,17 +60,21 @@ public class AuthController : ControllerBase
         return true;
     }
 
-    private string GenerateJwtToken(string username, List<string> roles)
+    private string GenerateJwtToken(KULLANICI user, List<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, user.KULLANICI_ADI),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.GivenName, user.ID.ToString()),
+        };
+
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
         var issuer = _configuration["JWT:Issuer"];
         var audience = _configuration["JWT:Audience"];
         var token = new JwtSecurityToken(

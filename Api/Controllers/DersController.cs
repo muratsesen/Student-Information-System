@@ -8,54 +8,50 @@ using Api.Data.Repositories;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("mufredat")]
+[Route("DERS")]
 [Authorize]
-public class MufredatController : ControllerBase
+public class DersController : ControllerBase
 {
 
 
-    private readonly ILogger<MufredatController> logger;
-    private readonly IRepository<MUFREDAT> mufredatRepo;
+    private readonly ILogger<DersController> logger;
+    private readonly IRepository<DERS> dersRepo;
 
-    public MufredatController(ILogger<MufredatController> _logger,
-        IRepository<MUFREDAT> _mufredatRepo
+    public DersController(ILogger<DersController> _logger,
+        IRepository<DERS> _dersRepo
         )
     {
         logger = _logger;
-        mufredatRepo = _mufredatRepo;
+        dersRepo = _dersRepo;
     }
 
     [HttpPost("yeni")]
     [Authorize(Policy = "AdminRole")]
-    public MUFREDAT Post(MUFREDAT model)
+    public DERS Post(DERS model)
     {
-        var count = mufredatRepo.GetCount(m => m.MUFREDAT_ADI == model.MUFREDAT_ADI);
-
-        mufredatRepo.Add(model);
-
-        return model;
+        return dersRepo.Add(model);
     }
 
     [HttpPut("degistir")]
     [Authorize(Policy = "AdminRole")]
-    public MUFREDAT Put(MUFREDAT model)
+    public DERS Put(DERS model)
     {
-        return mufredatRepo.Update(model);
+        return dersRepo.Update(model);
     }
 
 
-    [HttpGet("mufredatlar")]
+    [HttpGet("dersler")]
     [Authorize(Policy = "AdminRole")]
-    public IEnumerable<MUFREDAT> Get()
+    public IEnumerable<DERS> Get()
     {
-        return mufredatRepo.GetList();
+        return dersRepo.GetList();
     }
 
-    [HttpGet("mufredat/{id}")]
+    [HttpGet("ders/{id}")]
     [Authorize]
-    public MUFREDAT GetById(int id)
+    public DERS GetById(int id)
     {
-        return mufredatRepo.Get(m => m.ID == id);
+        return dersRepo.Get(m => m.ID == id);
     }
 
 }

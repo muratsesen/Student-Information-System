@@ -3,10 +3,12 @@ using BCrypt.Net;
 using System.Collections.Generic;
 using Api.Data.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using Api.Data.Repositories.Abstract;
+
 
 namespace Api.Data.Models;
 
-public class KULLANICI : BaseEntity
+public class KULLANICI : BaseEntity, IEntity
 {
     public string KULLANICI_ADI { get; set; }
     public string SIFRE { get; set; }

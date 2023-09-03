@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Api.Data.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Repositories
 {
@@ -8,13 +9,18 @@ namespace Api.Data.Repositories
         where TEntity : class, IEntity
         where TContext : AppDbContext
     {
-        public BaseRepository()
+        public BaseRepository(AppDbContext context)
         {
+            Context = context;
         }
+
+        protected AppDbContext Context { get; }
 
         public TEntity Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            Context.Add(entity);
+            SaveChanges();
+            return entity;
         }
 
         public Task<TEntity> AddAsync(TEntity entity)
@@ -39,7 +45,7 @@ namespace Api.Data.Repositories
 
         public TEntity Get(Expression<Func<TEntity, bool>> expression)
         {
-            throw new NotImplementedException();
+            return Context.Set<TEntity>().FirstOrDefault(expression);
         }
 
         public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includeProperties)
@@ -49,7 +55,7 @@ namespace Api.Data.Repositories
 
         public int GetCount(Expression<Func<TEntity, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            return expression == null ? Context.Set<TEntity>().Count() : Context.Set<TEntity>().Count(expression);
         }
 
         public Task<int> GetCountAsync(Expression<Func<TEntity, bool>> expression = null)
@@ -59,7 +65,9 @@ namespace Api.Data.Repositories
 
         public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            return expression == null
+            ? Context.Set<TEntity>().AsNoTracking()
+            : Context.Set<TEntity>().Where(expression).AsNoTracking();
         }
 
         public Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression = null)
@@ -99,7 +107,7 @@ namespace Api.Data.Repositories
 
         public int SaveChanges()
         {
-            throw new NotImplementedException();
+            return Context.SaveChanges();
         }
 
         public Task<int> SaveChangesAsync()
@@ -109,7 +117,9 @@ namespace Api.Data.Repositories
 
         public TEntity Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            Context.Update(entity);
+            SaveChanges();
+            return entity;
         }
     }
 }
