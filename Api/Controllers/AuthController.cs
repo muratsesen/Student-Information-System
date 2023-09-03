@@ -38,13 +38,13 @@ public class AuthController : ControllerBase
         if (IsValidUser(model, out user, out roles))
         {
             var token = GenerateJwtToken(user, roles);
-            return Ok(new { token });
+
+            return Ok(new { token, userType = user.TUR });
         }
 
         return Unauthorized("Invalid credentials");
     }
-
-    [Authorize]
+    [AllowAnonymous]
     [HttpGet("info")]
     public IActionResult Info()
     {

@@ -119,9 +119,23 @@ public class OgrenciController : ControllerBase
 
     [HttpGet("ogrenciler")]
     [Authorize(Policy = "AdminRole")]
-    public IEnumerable<OGRENCI> Get()
+    public IActionResult Get()
     {
-        return ogrenciRepo.GetList();
+        //var ogrencilListesi = ogrenciRepo.GetList();
+        var ogrencilListesi = context.OGRENCILER.Include(o => o.KIMLIK).ToList();
+
+        List<OgrenciModel> ogrenciModels = new List<OgrenciModel>();
+
+        foreach (var ogrenci in ogrencilListesi)
+        {
+            ogrenciModels.Add(new OgrenciModel
+            {
+                Id = ogrenci.ID,
+                Name = ogrenci.KIMLIK.AD + " " + ogrenci.KIMLIK.SOYAD
+            });
+        }
+
+        return Ok(ogrenciModels);
     }
 
     [HttpGet("ogrenci/{id}")]
