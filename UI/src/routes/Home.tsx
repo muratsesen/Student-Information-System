@@ -27,8 +27,13 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data)
         localStorage.setItem("token", data.token);
+        localStorage.setItem("ogrenciId", data.ogrenciId);
+        localStorage.setItem("mufredatId", data.mufredatId);
+        localStorage.setItem("userId", data.userId);
         dispatch(login({ userType: data.userType, token: data.token }));
+        
       });
     
     // ToastNotify("Successfully logged in");

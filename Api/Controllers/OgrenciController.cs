@@ -48,22 +48,35 @@ public class OgrenciController : ControllerBase
     [Authorize(Policy = "AdminRole")]
     public StudentCreateModel Post(StudentCreateModel model)
     {
-        if (model.ILETISIM != null)
-        {
-            iletisimRepo.Add(model.ILETISIM);
-        }
+        var ogrenci = new OGRENCI();
+        var iletisim = new ILETISIM();
+        var kimlik = new KIMLIK();
 
-        if (model.KIMLIK != null)
-        {
-            model.KIMLIK.ILETISIM_ID = model.ILETISIM.ID;
-            kimlikRepo.Add(model.KIMLIK);
-        }
+        iletisim.ADRES = model.Adres;
+        iletisim.EMAIL = model.Email;
+        iletisim.GSM = model.Gsm;
+        iletisim.IL = model.Il;
+        iletisim.ILCE = model.Ilce;
 
-        if (model.OGRENCI != null)
-        {
-            model.OGRENCI.KIMLIK_ID = model.KIMLIK.ID;
-            ogrenciRepo.Add(model.OGRENCI);
-        }
+        kimlik.TC_NO = model.TckNo;
+        kimlik.AD = model.Ad;
+        kimlik.SOYAD = model.Soyad;
+        kimlik.DOGUM_TARIHI = model.DogumTarihi;
+        kimlik.DOGUM_YERI = model.DogumYeri;
+
+        //iletisim.ID = 99;
+        //iletisimRepo.Add(iletisim);
+        context.ILETISIMLER.Add(iletisim);
+        context.SaveChanges();
+
+        kimlik.ILETISIMID = iletisim.ID;
+        kimlikRepo.Add(kimlik);
+
+        ogrenci.KIMLIKID = kimlik.ID;
+        ogrenci.MUFREDATID = model.MufredatId;
+
+        ogrenciRepo.Add(ogrenci);
+
 
         return model;
     }
@@ -72,21 +85,32 @@ public class OgrenciController : ControllerBase
     [Authorize(Policy = "AdminRole")]
     public StudentCreateModel Put(StudentCreateModel model)
     {
+        var ogrenci = ogrenciRepo.Get(o => o.ID == model.OgrenciId);
+        var iletisim = iletisimRepo.Get(i => i.ID == model.IletisimId);
+        var kimlik = kimlikRepo.Get(k => k.ID == model.KimlikId);
 
-        if (model.ILETISIM != null)
-        {
-            iletisimRepo.Update(model.ILETISIM);
-        }
+        iletisim.ADRES = model.Adres;
+        iletisim.EMAIL = model.Email;
+        iletisim.GSM = model.Gsm;
+        iletisim.IL = model.Il;
+        iletisim.ILCE = model.Ilce;
 
-        if (model.KIMLIK != null)
-        {
-            kimlikRepo.Update(model.KIMLIK);
-        }
+        kimlik.TC_NO = model.TckNo;
+        kimlik.AD = model.Ad;
+        kimlik.SOYAD = model.Soyad;
+        kimlik.DOGUM_TARIHI = model.DogumTarihi;
+        kimlik.DOGUM_YERI = model.DogumYeri;
 
-        if (model.OGRENCI != null)
-        {
-            ogrenciRepo.Update(model.OGRENCI);
-        }
+
+        iletisimRepo.Update(iletisim);
+
+        kimlikRepo.Update(kimlik);
+
+        ogrenci.MUFREDATID = model.MufredatId;
+
+        ogrenciRepo.Update(ogrenci);
+
+
         return model;
     }
 
@@ -96,9 +120,9 @@ public class OgrenciController : ControllerBase
     {
         var ogr = ogrenciRepo.Get(o => o.ID == model.OGRENCI_ID);
 
-        var kimlik = kimlikRepo.Get(k => k.ID == ogr.KIMLIK_ID);
+        var kimlik = kimlikRepo.Get(k => k.ID == ogr.KIMLIKID);
 
-        var iletisim = iletisimRepo.Get(i => i.ID == kimlik.ILETISIM_ID);
+        var iletisim = iletisimRepo.Get(i => i.ID == kimlik.ILETISIMID);
 
 
         if (model.ILETISIM != null)
@@ -142,20 +166,39 @@ public class OgrenciController : ControllerBase
     [Authorize(Roles = "admin,user")]
     public IActionResult GetById(int id)
     {
-        var ogr = ogrenciRepo.Get(ogr => ogr.ID == id);
-        var kimlik = kimlikRepo.Get(kml => kml.ID == ogr.KIMLIK_ID);
-        var iletisim = iletisimRepo.Get(ilt => ilt.ID == kimlik.ILETISIM_ID);
+        //var ogr = ogrenciRepo.Get(ogr => ogr.ID == id);
+        //var kimlik = kimlikRepo.Get(kml => kml.ID == ogr.KIMLIKID);
+        //var iletisim = iletisimRepo.Get(ilt => ilt.ID == kimlik.ILETISIMID);
+        var ogrenci = context.OGRENCILER.Where(o => o.ID == id)
+            .Include(o => o.MUFREDAT)
+            .Include(o => o.KIMLIK).ThenInclude(k => k.ILETISIM)
+            .Select(o => new
+            {
 
-        var model = new OgrenciViewModel();
-        model.ILETISIM = iletisim;
-        model.KIMLIK = kimlik;
-        model.OGRENCI = ogr;
+                OgrenciId = o.ID,
+                OgrenciNo = o.OGR_NO,
+                Adres = o.KIMLIK.ILETISIM.ADRES,
+                Il = o.KIMLIK.ILETISIM.IL,
+                Ilce = o.KIMLIK.ILETISIM.ILCE,
+                Email = o.KIMLIK.ILETISIM.EMAIL,
+                Gsm = o.KIMLIK.ILETISIM.GSM,
+                TckNo = o.KIMLIK.TC_NO,
+                Ad = o.KIMLIK.AD,
+                Soyad = o.KIMLIK.SOYAD,
+                DogumYeri = o.KIMLIK.DOGUM_YERI,
+                DogumTarihi = o.KIMLIK.DOGUM_TARIHI,
+                MufredatId = o.MUFREDAT.ID,
+                IletisimId = o.KIMLIK.ILETISIMID,
+                KimlikId = o.KIMLIKID,
+                MufredatName = o.MUFREDAT.MUFREDAT_ADI,
+            })
+            .FirstOrDefault();
 
         var user = HttpContext.User;
 
         if (user.IsInRole("admin"))
         {
-            return Ok(model);
+            return Ok(ogrenci);
         }
 
         var kullanici = GetUser(id);
@@ -165,7 +208,7 @@ public class OgrenciController : ControllerBase
             return Unauthorized();
         }
 
-        return Ok(model);
+        return Ok(ogrenci);
     }
 
     [HttpGet("mufredat/{ogrenci_id}")]
@@ -176,7 +219,7 @@ public class OgrenciController : ControllerBase
 
         if (ogr != null)
         {
-            return mufredatRepo.Get(m => m.ID == ogr.MUFREDAT_ID);
+            return mufredatRepo.Get(m => m.ID == ogr.MUFREDATID);
         }
 
         return null;
@@ -190,7 +233,7 @@ public class OgrenciController : ControllerBase
 
         if (ogr != null)
         {
-            ogr.MUFREDAT_ID = model.MufredatId;
+            ogr.MUFREDATID = model.MufredatId;
 
             ogrenciRepo.Update(ogr);
 
@@ -208,7 +251,7 @@ public class OgrenciController : ControllerBase
 
         if (ogr != null)
         {
-            return mufredatRepo.Get(m => m.ID == ogr.MUFREDAT_ID);
+            return mufredatRepo.Get(m => m.ID == ogr.MUFREDATID);
         }
 
         return null;
@@ -236,7 +279,7 @@ public class OgrenciController : ControllerBase
         {
             return null;
         }
-        return kullanciRepo.Get(k => k.KIMLIK_ID == ogr.KIMLIK_ID);
+        return kullanciRepo.Get(k => k.KIMLIKID == ogr.KIMLIKID);
     }
     private bool IsCurrentUser(int studentId)
     {

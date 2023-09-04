@@ -32,6 +32,7 @@
     <None Remove="Data\Models\Enums\" />
     <None Remove="Data\Repositories\" />
     <None Remove="Data\Repositories\Abstract\" />
+    <None Remove="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -41,5 +42,6 @@
     <Folder Include="Data\Models\Enums\" />
     <Folder Include="Data\Repositories\" />
     <Folder Include="Data\Repositories\Abstract\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

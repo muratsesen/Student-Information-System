@@ -13,8 +13,10 @@ namespace Api.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            //AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+
+
         }
 
         //public DbSet<User> Users { get; set; }
@@ -34,79 +36,77 @@ namespace Api.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<OGRENCI>()
-                .HasOne(o => o.MUFREDAT)
-                .WithMany(m => m.OGRENCILER).HasForeignKey(p => p.MUFREDAT_ID);
+            //modelBuilder.Entity<OGRENCI>()
+            //    .HasOne(o => o.MUFREDAT)
+            //    .WithMany(m => m.OGRENCILER).HasForeignKey(p => p.MUFREDATID);
 
-            modelBuilder.Entity<MUFREDAT>()
-                .HasMany(m => m.MUFREDAT_DERSLER)
-                .WithOne(md => md.MUFREDAT)
-                .HasForeignKey(md => md.MUFREDAT_ID);
+            //modelBuilder.Entity<MUFREDAT>()
+            //    .HasMany(m => m.MUFREDAT_DERSLER)
+            //    .WithOne(md => md.MUFREDAT)
+            //    .HasForeignKey(md => md.MUFREDATID);
 
-            modelBuilder.Entity<DERS>()
-                .HasMany(d => d.MUFREDAT_DERSLERs)
-                .WithOne(md => md.DERS)
-                .HasForeignKey(md => md.DERS_ID);
+            //modelBuilder.Entity<DERS>()
+            //    .HasMany(d => d.MUFREDAT_DERSLERs)
+            //    .WithOne(md => md.DERS)
+            //    .HasForeignKey(md => md.DERSID);
 
-            modelBuilder.Entity<MUFREDAT_DERSLER>()
-                .HasOne(md => md.MUFREDAT)
-                .WithMany(m => m.MUFREDAT_DERSLER)
-                .HasForeignKey(md => md.MUFREDAT_ID);
+            //modelBuilder.Entity<MUFREDAT_DERSLER>()
+            //    .HasOne(md => md.MUFREDAT)
+            //    .WithMany(m => m.MUFREDAT_DERSLER)
+            //    .HasForeignKey(md => md.MUFREDATID);
 
-            modelBuilder.Entity<MUFREDAT_DERSLER>()
-                .HasOne(md => md.DERS)
-                .WithMany(d => d.MUFREDAT_DERSLERs)
-                .HasForeignKey(md => md.DERS_ID);
+            //modelBuilder.Entity<MUFREDAT_DERSLER>()
+            //    .HasOne(md => md.DERS)
+            //    .WithMany(d => d.MUFREDAT_DERSLERs)
+            //    .HasForeignKey(md => md.DERSID);
 
-            modelBuilder.Entity<KULLANICI>()
-                .HasOne(k => k.KIMLIK)
-                .WithOne()
-                .HasForeignKey<KIMLIK>(k => k.ID)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<KULLANICI>()
+            //    .HasOne(k => k.KIMLIK)
+            //    .WithOne()
+            //    .HasForeignKey<KIMLIK>(k => k.ID);
 
 
-            modelBuilder.Entity<KIMLIK>()
-                .HasOne(k => k.ILETISIM)
-                .WithOne()
-                .HasForeignKey<ILETISIM>(i => i.ID)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<KIMLIK>()
+            //    .HasOne(k => k.ILETISIM)
+            //    .WithOne()
+            //    .HasForeignKey<ILETISIM>(i => i.ID);
 
-            modelBuilder.Entity<OGRENCI>()
-                .HasOne(o => o.KIMLIK)
-                .WithOne()
-                .HasForeignKey<OGRENCI>(k => k.KIMLIK_ID);
+            //modelBuilder.Entity<OGRENCI>()
+            //    .HasOne(o => o.KIMLIK)
+            //    .WithOne()
+            //    .HasForeignKey<OGRENCI>(k => k.KIMLIKID);
 
             //Bir öğrencinin bir derse sadece bir kere kayıt olmasını kontrol eder.
-            modelBuilder.Entity<DERS_KAYIT>()
-                        .HasAlternateKey(r => new { r.OGR_ID, r.DERS_ID })
-                        .HasName("UQ_DersKayit");
+            //modelBuilder.Entity<DERS_KAYIT>()
+            //            .HasAlternateKey(r => new { r.OGRID, r.DERSID })
+            //            .HasName("UQ_DersKayit");
 
-            modelBuilder.Entity<DERS_KAYIT>()
-                .HasOne(dk => dk.OGRENCI)
-                .WithMany(o => o.DERS_KAYITLARI)
-                .HasForeignKey(dk => dk.OGR_ID);
+            //modelBuilder.Entity<DERS_KAYIT>()
+            //    .HasOne(dk => dk.OGRENCI)
+            //    .WithMany(o => o.DERS_KAYITLARI)
+            //    .HasForeignKey(dk => dk.OGRID);
 
-            modelBuilder.Entity<DERS_KAYIT>()
-                .HasOne(dk => dk.DERS)
-                .WithMany(d => d.DERS_KAYITLARI)
-                .HasForeignKey(dk => dk.DERS_ID);
+            //modelBuilder.Entity<DERS_KAYIT>()
+            //    .HasOne(dk => dk.DERS)
+            //    .WithMany(d => d.DERS_KAYITLARI)
+            //    .HasForeignKey(dk => dk.DERSID);
 
 
 
             modelBuilder.Entity<OGRENCI>().HasData(
-                new OGRENCI { ID = 1, OGR_NO = 27482379, KIMLIK_ID = 3, MUFREDAT_ID = 1 },
-                new OGRENCI { ID = 2, OGR_NO = 23462368, KIMLIK_ID = 5, MUFREDAT_ID = 1 },
-                new OGRENCI { ID = 3, OGR_NO = 34565479, KIMLIK_ID = 6, MUFREDAT_ID = 2 },
-                new OGRENCI { ID = 4, OGR_NO = 53456346, KIMLIK_ID = 2, MUFREDAT_ID = 2 },
-                new OGRENCI { ID = 5, OGR_NO = 34674575, KIMLIK_ID = 4, MUFREDAT_ID = 3 }
+                new OGRENCI { ID = 1, OGR_NO = 27482379, KIMLIKID = 3, MUFREDATID = 1 },
+                new OGRENCI { ID = 2, OGR_NO = 23462368, KIMLIKID = 5, MUFREDATID = 1 },
+                new OGRENCI { ID = 3, OGR_NO = 34565479, KIMLIKID = 6, MUFREDATID = 2 },
+                new OGRENCI { ID = 4, OGR_NO = 53456346, KIMLIKID = 2, MUFREDATID = 2 },
+                new OGRENCI { ID = 5, OGR_NO = 34674575, KIMLIKID = 4, MUFREDATID = 3 }
             );
             modelBuilder.Entity<KIMLIK>().HasData(
-                new KIMLIK { ID = 1, TC_NO = 45456747611, AD = "Hasan", SOYAD = "Ersoy", DOGUM_YERI = "Kayseri", DOGUM_TARIHI = CreateUtcDate("11.10.1983"), ILETISIM_ID = 4 },
-                new KIMLIK { ID = 2, TC_NO = 67967856634, AD = "Mehmet", SOYAD = "Yılmaz", DOGUM_YERI = "Adana", DOGUM_TARIHI = CreateUtcDate("12.03.2000"), ILETISIM_ID = 1 },
-                new KIMLIK { ID = 3, TC_NO = 72347322958, AD = "Ahmet", SOYAD = "Ünal", DOGUM_YERI = "Ankara", DOGUM_TARIHI = CreateUtcDate("14.06.2001"), ILETISIM_ID = 6 },
-                new KIMLIK { ID = 4, TC_NO = 97850348520, AD = "Mustafa", SOYAD = "Işık", DOGUM_YERI = "Sivas", DOGUM_TARIHI = CreateUtcDate("21.12.2000"), ILETISIM_ID = 3 },
-                new KIMLIK { ID = 5, TC_NO = 32756874239, AD = "Ayşe", SOYAD = "Erdoğan", DOGUM_YERI = "Uşak", DOGUM_TARIHI = CreateUtcDate("04.03.2001"), ILETISIM_ID = 5 },
-                new KIMLIK { ID = 6, TC_NO = 98423479320, AD = "Fatma", SOYAD = "Korkmaz", DOGUM_YERI = "Kütahya", DOGUM_TARIHI = CreateUtcDate("01.01.2001"), ILETISIM_ID = 2 }
+                new KIMLIK { ID = 1, TC_NO = 45456747611, AD = "Hasan", SOYAD = "Ersoy", DOGUM_YERI = "Kayseri", DOGUM_TARIHI = CreateUtcDate("11.10.1983"), ILETISIMID = 4 },
+                new KIMLIK { ID = 2, TC_NO = 67967856634, AD = "Mehmet", SOYAD = "Yılmaz", DOGUM_YERI = "Adana", DOGUM_TARIHI = CreateUtcDate("12.03.2000"), ILETISIMID = 1 },
+                new KIMLIK { ID = 3, TC_NO = 72347322958, AD = "Ahmet", SOYAD = "Ünal", DOGUM_YERI = "Ankara", DOGUM_TARIHI = CreateUtcDate("14.06.2001"), ILETISIMID = 6 },
+                new KIMLIK { ID = 4, TC_NO = 97850348520, AD = "Mustafa", SOYAD = "Işık", DOGUM_YERI = "Sivas", DOGUM_TARIHI = CreateUtcDate("21.12.2000"), ILETISIMID = 3 },
+                new KIMLIK { ID = 5, TC_NO = 32756874239, AD = "Ayşe", SOYAD = "Erdoğan", DOGUM_YERI = "Uşak", DOGUM_TARIHI = CreateUtcDate("04.03.2001"), ILETISIMID = 5 },
+                new KIMLIK { ID = 6, TC_NO = 98423479320, AD = "Fatma", SOYAD = "Korkmaz", DOGUM_YERI = "Kütahya", DOGUM_TARIHI = CreateUtcDate("01.01.2001"), ILETISIMID = 2 }
             );
             modelBuilder.Entity<ILETISIM>().HasData(
                 new ILETISIM { ID = 1, ADRES = "CUMHURİYET MAH. BİRİNCİ SOK. İKİNCİ APT. NO:111/6", IL = "ANKARA", ILCE = "YENİMAHALLE", EMAIL = "abc@hotmail.com", GSM = "5332342342" },
@@ -131,33 +131,33 @@ namespace Api.Data
                 new MUFREDAT { ID = 3, MUFREDAT_ADI = "IngDilEdebiyat_Muf" }
             );
             modelBuilder.Entity<MUFREDAT_DERSLER>().HasData(
-                new MUFREDAT_DERSLER { ID = 1, MUFREDAT_ID = 1, DERS_ID = 2 },
-                new MUFREDAT_DERSLER { ID = 2, MUFREDAT_ID = 1, DERS_ID = 5 },
-                new MUFREDAT_DERSLER { ID = 3, MUFREDAT_ID = 1, DERS_ID = 6 },
-                new MUFREDAT_DERSLER { ID = 4, MUFREDAT_ID = 1, DERS_ID = 7 },
-                new MUFREDAT_DERSLER { ID = 5, MUFREDAT_ID = 2, DERS_ID = 1 },
-                new MUFREDAT_DERSLER { ID = 6, MUFREDAT_ID = 2, DERS_ID = 2 },
-                new MUFREDAT_DERSLER { ID = 7, MUFREDAT_ID = 2, DERS_ID = 3 },
-                new MUFREDAT_DERSLER { ID = 8, MUFREDAT_ID = 2, DERS_ID = 4 },
-                new MUFREDAT_DERSLER { ID = 9, MUFREDAT_ID = 2, DERS_ID = 6 },
-                new MUFREDAT_DERSLER { ID = 10, MUFREDAT_ID = 2, DERS_ID = 7 },
-                new MUFREDAT_DERSLER { ID = 11, MUFREDAT_ID = 3, DERS_ID = 1 },
-                new MUFREDAT_DERSLER { ID = 12, MUFREDAT_ID = 3, DERS_ID = 4 },
-                new MUFREDAT_DERSLER { ID = 13, MUFREDAT_ID = 3, DERS_ID = 5 },
-                new MUFREDAT_DERSLER { ID = 14, MUFREDAT_ID = 3, DERS_ID = 6 }
+                new MUFREDAT_DERSLER { ID = 1, MUFREDATID = 1, DERSID = 2 },
+                new MUFREDAT_DERSLER { ID = 2, MUFREDATID = 1, DERSID = 5 },
+                new MUFREDAT_DERSLER { ID = 3, MUFREDATID = 1, DERSID = 6 },
+                new MUFREDAT_DERSLER { ID = 4, MUFREDATID = 1, DERSID = 7 },
+                new MUFREDAT_DERSLER { ID = 5, MUFREDATID = 2, DERSID = 1 },
+                new MUFREDAT_DERSLER { ID = 6, MUFREDATID = 2, DERSID = 2 },
+                new MUFREDAT_DERSLER { ID = 7, MUFREDATID = 2, DERSID = 3 },
+                new MUFREDAT_DERSLER { ID = 8, MUFREDATID = 2, DERSID = 4 },
+                new MUFREDAT_DERSLER { ID = 9, MUFREDATID = 2, DERSID = 6 },
+                new MUFREDAT_DERSLER { ID = 10, MUFREDATID = 2, DERSID = 7 },
+                new MUFREDAT_DERSLER { ID = 11, MUFREDATID = 3, DERSID = 1 },
+                new MUFREDAT_DERSLER { ID = 12, MUFREDATID = 3, DERSID = 4 },
+                new MUFREDAT_DERSLER { ID = 13, MUFREDATID = 3, DERSID = 5 },
+                new MUFREDAT_DERSLER { ID = 14, MUFREDATID = 3, DERSID = 6 }
             );
             modelBuilder.Entity<KULLANICI>().HasData(
-                new KULLANICI { ID = 1, KULLANICI_ADI = "hasan.ersoy", SIFRE = SetPassword("Haser1."), TUR = KULLANICI_TIPI.ADMIN, KIMLIK_ID = 1 },
-                new KULLANICI { ID = 2, KULLANICI_ADI = "mehmet.yilmaz", SIFRE = SetPassword("Mehyil6!"), TUR = KULLANICI_TIPI.USER, KIMLIK_ID = 2 },
-                new KULLANICI { ID = 3, KULLANICI_ADI = "ahmet.unal", SIFRE = SetPassword("Ahun23+"), TUR = KULLANICI_TIPI.USER, KIMLIK_ID = 3 },
-                new KULLANICI { ID = 4, KULLANICI_ADI = "mustafa.isik", SIFRE = SetPassword("Musi64%"), TUR = KULLANICI_TIPI.USER, KIMLIK_ID = 4 },
-                new KULLANICI { ID = 5, KULLANICI_ADI = "ayse.erdogan", SIFRE = SetPassword("Ayer33."), TUR = KULLANICI_TIPI.USER, KIMLIK_ID = 5 },
-                new KULLANICI { ID = 6, KULLANICI_ADI = "fatma.korkmaz", SIFRE = SetPassword("Fatkor12%"), TUR = KULLANICI_TIPI.USER, KIMLIK_ID = 6 }
+                new KULLANICI { ID = 1, KULLANICI_ADI = "hasan.ersoy", SIFRE = SetPassword("Haser1."), TUR = KULLANICI_TIPI.ADMIN, KIMLIKID = 1 },
+                new KULLANICI { ID = 2, KULLANICI_ADI = "mehmet.yilmaz", SIFRE = SetPassword("Mehyil6!"), TUR = KULLANICI_TIPI.USER, KIMLIKID = 2 },
+                new KULLANICI { ID = 3, KULLANICI_ADI = "ahmet.unal", SIFRE = SetPassword("Ahun23+"), TUR = KULLANICI_TIPI.USER, KIMLIKID = 3 },
+                new KULLANICI { ID = 4, KULLANICI_ADI = "mustafa.isik", SIFRE = SetPassword("Musi64%"), TUR = KULLANICI_TIPI.USER, KIMLIKID = 4 },
+                new KULLANICI { ID = 5, KULLANICI_ADI = "ayse.erdogan", SIFRE = SetPassword("Ayer33."), TUR = KULLANICI_TIPI.USER, KIMLIKID = 5 },
+                new KULLANICI { ID = 6, KULLANICI_ADI = "fatma.korkmaz", SIFRE = SetPassword("Fatkor12%"), TUR = KULLANICI_TIPI.USER, KIMLIKID = 6 }
             );
-            modelBuilder.Entity<DERS_KAYIT>().HasData(
-                new DERS_KAYIT { ID = 1, OGR_ID = 3, DERS_ID = 3, CREATED_DATE = CreateUtcDate("04.11.2021") },
-                new DERS_KAYIT { ID = 2, OGR_ID = 4, DERS_ID = 6, CREATED_DATE = CreateUtcDate("04.11.2021") }
-            );
+            //modelBuilder.Entity<DERS_KAYIT>().HasData(
+            //    new DERS_KAYIT { ID = 1, OGRID = 3, DERSID = 3, CREATED_DATE = CreateUtcDate("04.11.2021") },
+            //    new DERS_KAYIT { ID = 2, OGRID = 4, DERSID = 6, CREATED_DATE = CreateUtcDate("04.11.2021") }
+            //);
 
 
 

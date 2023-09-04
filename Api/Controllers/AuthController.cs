@@ -38,8 +38,20 @@ public class AuthController : ControllerBase
         if (IsValidUser(model, out user, out roles))
         {
             var token = GenerateJwtToken(user, roles);
+            if (user.TUR == KULLANICI_TIPI.USER)
+            {
+                //Öğrenci id getir
+                var ogr = _context.OGRENCILER.Where(o => o.KIMLIKID == user.KIMLIKID)
+                                             .Select(o => new
+                                             {
+                                                 Id = o.ID,
+                                                 Mufredat_Id = o.MUFREDATID
+                                             })
+                                             .FirstOrDefault();
+                return Ok(new { token, userType = user.TUR, userId = user.ID, OgrenciId = ogr.Id, MufredatId = ogr.Mufredat_Id });
+            }
 
-            return Ok(new { token, userType = user.TUR });
+            return Ok(new { token, userType = user.TUR, userId = user.ID });
         }
 
         return Unauthorized("Invalid credentials");
@@ -55,22 +67,31 @@ public class AuthController : ControllerBase
             var currentUserIdClaim = HttpContext.User.FindFirst(ClaimTypes.GivenName);
             if (currentUserIdClaim != null && int.TryParse(currentUserIdClaim.Value, out int currentUserId))
             {
-                var kullanici = _context.KULLANICILAR.Where(k => k.ID == currentUserId).Include(k => k.KIMLIK).ThenInclude(p => p.ILETISIM).FirstOrDefault();
+                var kullanici = _context.KULLANICILAR.Where(k => k.ID == currentUserId)
+                    .Include(k => k.KIMLIK)
+                    .ThenInclude(p => p.ILETISIM)
+                    .FirstOrDefault();
 
                 if (kullanici == null) return NotFound();
 
                 KullaniciBilgiModel model = new KullaniciBilgiModel();
-                model.Adres = kullanici.KIMLIK.ILETISIM.ADRES;
-                model.AdSoyad = kullanici.KIMLIK.AD + " " + kullanici.KIMLIK.SOYAD;
                 model.Kullanici_Adi = kullanici.KULLANICI_ADI;
-                model.TCKN = kullanici.KIMLIK.TC_NO;
+                model.AdSoyad = kullanici.KIMLIK.AD + " " + kullanici.KIMLIK.SOYAD;
+
+                model.Adres = kullanici.KIMLIK.ILETISIM.ADRES;
+                model.Il = kullanici.KIMLIK.ILETISIM.IL;
+                model.Ilce = kullanici.KIMLIK.ILETISIM.ILCE;
+                model.Email = kullanici.KIMLIK.ILETISIM.EMAIL;
                 model.Telefon = kullanici.KIMLIK.ILETISIM.GSM;
+
+                model.TCKN = kullanici.KIMLIK.TC_NO;
+                model.DogumYeri = kullanici.KIMLIK.DOGUM_YERI;
+                model.DogumTarihi = kullanici.KIMLIK.DOGUM_TARIHI;
 
                 if (kullanici.TUR == KULLANICI_TIPI.USER)
                 {
-                    //Öğrenci id getir
-                    var ogr = _context.OGRENCILER.Where(o => o.KIMLIK_ID == kullanici.KIMLIK_ID)
-                                                 .Select(o => new { Id = o.ID, Mufredat_Id = o.MUFREDAT_ID })
+                    var ogr = _context.OGRENCILER.Where(o => o.KIMLIKID == kullanici.KIMLIKID)
+                                                 .Select(o => new { Id = o.ID, Mufredat_Id = o.MUFREDATID })
                                                  .FirstOrDefault();
                     model.OgrenciId = ogr.Id;
                     model.MufredatId = ogr.Mufredat_Id;
@@ -89,7 +110,8 @@ public class AuthController : ControllerBase
 
     private bool IsValidUser(LoginViewModel model, out KULLANICI user, out List<string> roles)
     {
-        user = _context.KULLANICILAR.Where(u => u.KULLANICI_ADI == model.KULLANICI_ADI).FirstOrDefault();
+        user = _context.KULLANICILAR.Where(k => k.KULLANICI_ADI == model.KULLANICI_ADI).Include(k => k.KIMLIK).ThenInclude(p => p.ILETISIM).FirstOrDefault();
+
         roles = new List<string>();
         if (user == null) return false;
 

@@ -10,8 +10,8 @@ public class KIMLIK : BaseEntity, IEntity
     public string SOYAD { get; set; }
     public string DOGUM_YERI { get; set; }
     public DateTime DOGUM_TARIHI { get; set; }
-    // [ForeignKey("ILETISIM_ID")]
-    public int ILETISIM_ID { get; set; }
+    [ForeignKey("ILETISIMID")]
+    public int ILETISIMID { get; set; }
 
     public ILETISIM ILETISIM { get; set; }
 }

@@ -4,3 +4,4 @@ Ben postgresql kullandım.
     ``dotnet ef database update`` komutunu çalıştırın.
 3-  Swagger UI kapalı. Açmak için launchSettings dosyasında gerekli değişikliği yapabilirsiniz.
 4- Postman collection paylaşacağım.
+

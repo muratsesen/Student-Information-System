@@ -1,13 +1,25 @@
 import React, { lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import store  from "./app";
+import store from "./app";
 import { Provider } from "react-redux";
 import "./index.css";
 
 import RootLayout from "./routes/RootLayout";
-import { Protected } from "./middleware/Protected";
+import { AdminOnly, Protected } from "./middleware/Protected";
 import UsersLessons from "./routes/UserLessons";
+import StudentLessons from "./routes/StudentLessons";
+import MufredatLessons from "./routes/MufredatLessons";
+import NewUser from "./routes/NewUser";
+import NewMufredat from "./routes/NewMufredat";
+import MufredatList from "./routes/MufredatList";
+import NewLesson from "./routes/NewLesson";
+import LessonList from "./routes/LessonList";
+import LessonDetails from "./routes/LessonDetails";
+import Students from "./routes/Students";
+import StudentDetails from "./routes/StudentDetails";
+import Profile from "./routes/Profile";
+import ProfileEdit from "./routes/ProfileEdit";
 const Users = lazy(() => import("./routes/Users"));
 const UserDetails = lazy(() => import("./routes/UserDetails"));
 const Home = lazy(() => import("./routes/Home"));
@@ -60,6 +72,22 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "students",
+        element: (
+          <Protected>
+            <Students />
+          </Protected>
+        ),
+      },
+      {
+        path: "students/:id",
+        element: (
+          <Protected>
+            <StudentDetails />
+          </Protected>
+        ),
+      },
+      {
         path: "registered-lessons/:id",
         element: (
           <Protected>
@@ -67,6 +95,103 @@ const router = createBrowserRouter([
           </Protected>
         ),
       },
+      {
+        path: "student-lessons",
+        element: (
+          <Protected>
+            <StudentLessons />
+          </Protected>
+        ),
+      },
+      {
+        path: "mufredat-lessons/:id",
+        element: (
+          <Protected>
+            <MufredatLessons />
+          </Protected>
+        ),
+      },
+      {
+        path: "mufredatlar",
+        element: (
+          <AdminOnly>
+            <MufredatList />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-mufredat",
+        element: (
+          <AdminOnly>
+            <NewMufredat />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-mufredat/:id",
+        element: (
+          <AdminOnly>
+            <NewMufredat />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-user",
+        element: (
+          <AdminOnly>
+            <NewUser />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-user/:id",
+        element: (
+          <AdminOnly>
+            <NewUser />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-lesson",
+        element: (
+          <AdminOnly>
+            <NewLesson />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-lesson/:id",
+        element: (
+          <AdminOnly>
+            <NewLesson />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "lessons",
+        element: (
+          <AdminOnly>
+            <LessonList />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <Protected>
+            <Profile />
+          </Protected>
+        ),
+      },
+      {
+        path: "edit-profile",
+        element: (
+          <Protected>
+            <ProfileEdit />
+          </Protected>
+        ),
+      },
+      
     ],
   },
 ]);

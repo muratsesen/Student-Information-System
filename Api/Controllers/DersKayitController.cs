@@ -55,11 +55,11 @@ public class DersKayitController : ControllerBase
         //ders öğrenciye tanımlı müfredatta var mı?
         //var ogrWithMufredatDers = context.OGRENCILER.Where(s => s.ID == model.OgrenciId).Include(o => o.MUFREDAT).ThenInclude(m => m.MUFREDAT_DERSLER).FirstOrDefault();
 
-        //var ders = ogrWithMufredatDers.MUFREDAT.MUFREDAT_DERSLER.Count(s => s.DERS_ID == model.DersId);
+        //var ders = ogrWithMufredatDers.MUFREDAT.MUFREDAT_DERSLER.Count(s => s.DERSID == model.DersId);
 
         //if (ders == 0) return BadRequest("Öğrencinin müfredatında bu ders bulunmuyor!");
 
-        bool derseKayitliMi = context.DERS_KAYIT.Any(dk => dk.OGR_ID == model.OgrenciId && dk.DERS_ID == model.DersId);
+        bool derseKayitliMi = context.DERS_KAYIT.Any(dk => dk.OGRENCIID == model.OgrenciId && dk.DERSID == model.DersId);
 
         if (derseKayitliMi)
         {
@@ -68,8 +68,8 @@ public class DersKayitController : ControllerBase
 
         var dersKayit = new DERS_KAYIT()
         {
-            DERS_ID = model.DersId,
-            OGR_ID = model.OgrenciId,
+            DERSID = model.DersId,
+            OGRENCIID = model.OgrenciId,
             CREATED_DATE = DateTime.UtcNow
         };
 
@@ -79,36 +79,16 @@ public class DersKayitController : ControllerBase
         return Ok(dersKayit);
     }
 
-    [HttpPut("degistir")]
-    [Authorize(Policy = "AdminRole")]
-    public StudentCreateModel Put(StudentCreateModel model)
-    {
 
-        if (model.ILETISIM != null)
-        {
-            iletisimRepo.Update(model.ILETISIM);
-        }
-
-        if (model.KIMLIK != null)
-        {
-            kimlikRepo.Update(model.KIMLIK);
-        }
-
-        if (model.OGRENCI != null)
-        {
-            ogrenciRepo.Update(model.OGRENCI);
-        }
-        return model;
-    }
 
 
     [HttpGet("dersler/{mufredat_id}")]
     [Authorize]
     public async Task<IActionResult> Get(int mufredat_id)
     {
-        // var muf = await mdRepo.GetListWithIncludeAsync(m => m.MUFREDAT_ID == 1, m => m.DERSLER);
+        // var muf = await mdRepo.GetListWithIncludeAsync(m => m.MUFREDATID == 1, m => m.DERSLER);
         var mufredatDersler = context.MUFREDAT_DERSLER
-                                    .Where(md => md.MUFREDAT_ID == mufredat_id)
+                                    .Where(md => md.MUFREDATID == mufredat_id)
                                     .Select(md => md.DERS)
                                     .ToList();
         return Ok(mufredatDersler);
@@ -119,8 +99,8 @@ public class DersKayitController : ControllerBase
     public IActionResult GetById(int id)
     {
         var ogr = ogrenciRepo.Get(ogr => ogr.ID == id);
-        var kimlik = kimlikRepo.Get(kml => kml.ID == ogr.KIMLIK_ID);
-        var iletisim = iletisimRepo.Get(ilt => ilt.ID == kimlik.ILETISIM_ID);
+        var kimlik = kimlikRepo.Get(kml => kml.ID == ogr.KIMLIKID);
+        var iletisim = iletisimRepo.Get(ilt => ilt.ID == kimlik.ILETISIMID);
 
         var model = new OgrenciViewModel();
         model.ILETISIM = iletisim;
@@ -154,7 +134,7 @@ public class DersKayitController : ControllerBase
         {
             return null;
         }
-        return kullanciRepo.Get(k => k.KIMLIK_ID == ogr.KIMLIK_ID);
+        return kullanciRepo.Get(k => k.KIMLIKID == ogr.KIMLIKID);
     }
     private bool IsCurrentUser(int studentId)
     {

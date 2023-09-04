@@ -31,21 +31,7 @@ const NavLinks = () => {
           <>
 
             {userType === 0 ? (
-              <NavLink
-                to="users"
-                className={({ isActive, isPending }) =>
-                  isPending
-                    ? "pending"
-                    : isActive
-                      ? "text-green-500"
-                      : "text-gray-400"
-                }
-              >
-                <Text>ÖĞRENCİLER</Text>
-              </NavLink>
-            ) :
-
-              userType === 1 ? (
+              <>
                 <NavLink
                   to="users"
                   className={({ isActive, isPending }) =>
@@ -56,8 +42,86 @@ const NavLinks = () => {
                         : "text-gray-400"
                   }
                 >
-                  <Text>DERSLERİM</Text>
+                  <Text>KULLANICILAR</Text>
                 </NavLink>
+                <NavLink
+                  to="students"
+                  className={({ isActive, isPending }) =>
+                    isPending
+                      ? "pending"
+                      : isActive
+                        ? "text-green-500"
+                        : "text-gray-400"
+                  }
+                >
+                  <Text>ÖĞRENCİLER</Text>
+                </NavLink>
+                <NavLink
+                  to="mufredatlar"
+                  className={({ isActive, isPending }) =>
+                    isPending
+                      ? "pending"
+                      : isActive
+                        ? "text-green-500"
+                        : "text-gray-400"
+                  }
+                >
+                  <Text>MÜFREDATLAR</Text>
+                </NavLink>
+                <NavLink
+                  to="lessons"
+                  className={({ isActive, isPending }) =>
+                    isPending
+                      ? "pending"
+                      : isActive
+                        ? "text-green-500"
+                        : "text-gray-400"
+                  }
+                >
+                  <Text>DERSLER</Text>
+                </NavLink>
+              </>
+            ) :
+
+              userType === 1 ? (
+                <>
+                  <NavLink
+                    to="student-lessons"
+                    className={({ isActive, isPending }) =>
+                      isPending
+                        ? "pending"
+                        : isActive
+                          ? "text-green-500"
+                          : "text-gray-400"
+                    }
+                  >
+                    <Text>KAYIT OLDUĞUM DERSLERİM</Text>
+                  </NavLink>
+                  <NavLink
+                    to="mufredat-lessons"
+                    className={({ isActive, isPending }) =>
+                      isPending
+                        ? "pending"
+                        : isActive
+                          ? "text-green-500"
+                          : "text-gray-400"
+                    }
+                  >
+                    <Text>TÜM DERSLER</Text>
+                  </NavLink>
+                  <NavLink
+                    to="profile"
+                    className={({ isActive, isPending }) =>
+                      isPending
+                        ? "pending"
+                        : isActive
+                          ? "text-green-500"
+                          : "text-gray-400"
+                    }
+                  >
+                    <Text>BİLGİLERİM</Text>
+                  </NavLink>
+                </>
               ) : ""
             }
           </>

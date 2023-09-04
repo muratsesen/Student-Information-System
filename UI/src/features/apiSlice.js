@@ -29,311 +29,161 @@ export const apiSlice = createApi({
     tagTypes: [],
     refetchOnMountOrArgChange: true,
     endpoints: builder => ({
-        registeredLessons:builder.query({
-            query:(data)=>({
-                url:`ogrenci/kayitolunan-dersler/${data.id}`,
-                method:"get",
-            })
-        }),
-        paths: builder.query({
+        lessons: builder.query({
             query: (data) => ({
-                url: '/learningpaths',
+                url: `ders/dersler`,
                 method: "get",
             })
         }),
-        practice: builder.query({
+        lessonContent: builder.query({
             query: (data) => ({
-                url: `/learningpaths/${data.id}/practices/`,
+                url: `ders/ders/${data.id}`,
                 method: "get",
             })
         }),
-        lesson: builder.query({
-            query: ({id}) => ({
-                url: `courses/lessons/${id}/`,
-                method: "get",
-            })
-        }),
-        courses: builder.query({
+        createLesson: builder.mutation({
             query: (data) => ({
-                url: '/courses',
-                method: "get",
-            }),
-            providesTags: ['course'],
-        }),
-        singleCourse: builder.query({
-            query: (data) => ({
-                url: `/courses/${data.id}`,
-                method: "get",
-            }),
-            providesTags: ['course'],
-        }),
-        createCourse: builder.mutation({
-            query: ({ title, technology, description, order_number, status, level }) => ({
-                url: `courses/`,
+                url: `ders/yeni`,
                 method: "post",
-                body: { title, technology, description, order_number, status, level }
-            }),
-            invalidatesTags: ['course'],
+                body:data
+            })
         }),
-        updateCourse: builder.mutation({
-            query: ({ id, title, technology, description, order_number, status, level, chapters, points, labels }) => ({
-                url: `courses/${id}/`,
+        updateLesson: builder.mutation({
+            query: (data) => ({
+                url: `ders/degistir`,
                 method: "put",
-                body: { id, title, technology, description, order_number, status, level, chapters, points, labels }
-            }),
-            invalidatesTags: ['course'],
+                body:data
+            })
         }),
-        deleteCourse: builder.mutation({
-            query: (id) => ({
-                url: `courses/${id}/`,
-                method: "delete",
-            }),
-            invalidatesTags: ['course'],
-        }),
-        games: builder.query({
+        registeredLessons: builder.query({
             query: (data) => ({
-                url: '/games',
+                url: `ogrenci/kayitolunan-dersler/${data.id}`,
                 method: "get",
             })
         }),
-        gamesWithSection: builder.query({
+        students: builder.query({
             query: (data) => ({
-                url: `/games/${data.id}/sections`,
+                url: `ogrenci/ogrenciler`,
                 method: "get",
             })
         }),
-        gameStepsWithSection: builder.query({
+        studentDetails: builder.query({
             query: (data) => ({
-                url: `/games/${data.id}/sections/${data.sectionId}/steps`,
+                url: `ogrenci/ogrenci/${data.id}`,
                 method: "get",
             })
         }),
-        gameStepWithSectionId: builder.query({
+        createStudent: builder.mutation({
             query: (data) => ({
-                url: `/games/${data.gameId}/sections/${data.sectionId}/steps/${data.stepId}`,
-                method: "get",
+                url: `ogrenci/yeni`,
+                method: "post",
+                body:data
             })
         }),
-        gameStepsWithoutSection: builder.query({
+        updateStudent: builder.mutation({
             query: (data) => ({
-                url: `/games/${data.id}/sections/steps`,
-                method: "get",
-            })
-        }),
-        gameStepWithoutSectionId: builder.query({
-            query: (data) => ({
-                url: `/games/${data.gameId}/sections/steps/${data.stepId}`,
-                method: "get",
-            })
-        }),
-        leaderBoards: builder.query({
-            query: (data) => ({
-                url: 'leaderboards/totalpoints/',
-                method: "get",
-            })
-        }),
-        user: builder.query({
-            query: (data) => ({
-                url: `users/${data.userId}`,
-                method: "get",
-            }),
-            providesTags: ['userProfil'],
-        }),
-        updateProfil: builder.mutation({
-            query: ({ id, first_name, last_name, username, user_avatar, school, birth_date }) => ({
-                url: `auth/update_profile/${id}/`,
+                url: `ogrenci/degistir`,
                 method: "put",
-                body: { id, first_name, last_name, username, user_avatar, school, birth_date }
-            }),
-            invalidatesTags: ['userProfil'],
-        }),
-        activeDays: builder.query({
-            query: (data) => ({
-                url: 'useractivies/activedays/month/',
-                method: "get",
+                body:data
             })
         }),
-        activeDaysDate: builder.query({
-            query: (data) => ({
-                url: 'useractivies/activedays/',
-                method: "get",
-            })
-        }),
-        followingLessons: builder.query({
+        mufredatlar: builder.query({
             query: () => ({
-                url: 'useractivies/lessons_followed/',
-                method: "get",
+                url: `mufredat/mufredatlar`,
+                method: "get"
             })
         }),
-        userActivitiesInLastDays: builder.query({
-            query: () => ({
-                url: 'useractivies/in_last_days/',
-                method: "get",
-            })
-        }),
-        dailyAdvice: builder.query({
+        mufredatDersler: builder.query({
             query: (data) => ({
-                url: 'daily_advice/',
-                method: "get",
+                url: `mufredat/dersler/${data.id}`,
+                method: "get"
             })
         }),
-        addDailyAdvice: builder.mutation({
-            query: (title) => ({
-                url: 'daily_advice/',
+        mufredat: builder.query({
+            query: (data) => ({
+                url: `mufredat/mufredat/${data.id}`,
+                method: "get"
+            })
+        }),
+        createMufredat: builder.mutation({
+            query: (data) => ({
+                url: `mufredat/yeni`,
                 method: "post",
-                body: { title },
+                body:data
             })
         }),
-        allUserLessonActivities: builder.query({
-            query: () => ({
-                url: 'useractivies/lessons/',
-                method: "get",
-            }),
-            providesTags: ['videos'],
-        }),
-        addUserLessonActivities: builder.mutation({
-            query: (lesson) => ({
-                url: 'useractivies/lessons/',
-                method: "post",
-                body: { lesson },
-            }),
-            invalidatesTags: ['videos'],
-        }),
-        removeUserLessonActivite: builder.mutation({
-            query: (lesson) => ({
-                url: `useractivies/lessons/${lesson}`,
-                method: "delete",
-                body: { lesson },
-            }),
-            invalidatesTags: ['videos'],
-        }),
-        userSertificates: builder.query({
-            query: () => ({
-                url: 'awards/certificates/',
-                method: "get",
-            }),
-        }),
-        userBadges: builder.query({
-            query: () => ({
-                url: 'awards/badges/',
-                method: "get",
-            }),
-        }),
-        clearCache: builder.mutation({
-            query: () => ({
-                url: 'system_dashboard/cahce/flush/',
-                method: "delete",
-            }),
+        updateMufredat: builder.mutation({
+            query: (data) => ({
+                url: `mufredat/degistir`,
+                method: "put",
+                body:data
+            })
         }),
         users: builder.query({
-            query: () => ({
-                url: 'users/',
+            query: (data) => ({
+                url: `users`,
                 method: "get",
-            }),
-            providesTags: ['user'],
+            })
         }),
-        getUser: builder.query({
-            query: (id) => ({
-                url: `users/${id}/`,
+        userDetails: builder.query({
+            query: (data) => ({
+                url: `users/${data.id}`,
                 method: "get",
-            }),
+            })
         }),
         createUser: builder.mutation({
-            query: ({ first_name, last_name, email, subscription_type, subscription_period, role, telNumber }) => ({
-                url: `users/`,
+            query: (data) => ({
+                url: `users`,
                 method: "post",
-                body: { first_name, last_name, email, subscription_type, subscription_period, role, telNumber }
-            }),
-            invalidatesTags: ['user'],
+                body:data
+            })
         }),
         updateUser: builder.mutation({
-            query: ({ id, first_name, last_name, email, subscription_type, subscription_period, role, telNumber }) => ({
-                url: `users/${id}/`,
+            query: (data) => ({
+                url: `users`,
                 method: "put",
-                body: { id, first_name, last_name, email, subscription_type, subscription_period, role, telNumber }
-            }),
-            invalidatesTags: ['user'],
+                body:data
+            })
         }),
         deleteUser: builder.mutation({
-            query: (id) => ({
-                url: `users/${id}/`,
-                method: "delete",
-            }),
-            invalidatesTags: ['user'],
-        }),
-        getUserSubscriptionType: builder.query({
-            query: () => ({
-                url: `users/subscription_type/`,
-                method: "get",
-            }),
-        }),
-        getTotalStudent: builder.query({
-            query: () => ({
-                url: `classes/total/`,
-                method: "get",
-            }),
-        }),
-        joinToClass: builder.mutation({
-            query: (class_code) => ({
-                url: `classes/student/join/`,
-                method: "post",
-                body: { class_code }
-            }),
-        }),
-        getStudentSubscribedClasses: builder.query({
-            query: () => ({
-                url: `classes/students/`,
-                method: "get",
-            }),
-        }),
-        getStudentHomework: builder.query({
-            query: (id) => ({
-                url: `classes/students/homeworks/${id}/`,
-                method: "get",
-            }),
-        }),
-        trails: builder.query({
-            query: () => ({
-                url: '/trails',
-                method: "get",
-            }),
-            providesTags: ['trail'],
-        }),
-        singleTrail: builder.query({
             query: (data) => ({
-                url: `/trails/${data.id}`,
-                method: "get",
-            }),
-            providesTags: ['trail'],
-        }),
-        createTrail: builder.mutation({
-            query: ({ title, description, order_number, status, courses }) => ({
-                url: `trails/`,
-                method: "post",
-                body: { title, description, order_number, status, courses  }
-            }),
-            invalidatesTags: ['trail'],
-        }),
-        updateTrail: builder.mutation({
-            query: ({ id, title, description, order_number, status, courses}) => ({
-                url: `trails/${id}/`,
-                method: "put",
-                body: { id, title, description, order_number, status, courses}
-            }),
-            invalidatesTags: ['trail'],
-        }),
-        deleteTrail: builder.mutation({
-            query: (id) => ({
-                url: `trails/${id}/`,
+                url: `users`,
                 method: "delete",
-            }),
-            invalidatesTags: ['trail'],
+                body:data
+            })
         }),
+        profile: builder.query({
+            query: () => ({
+                url: `auth/info`,
+                method: "get",
+            })
+        }),
+
+        
     })
 })
 
-export const { 
-    useRegisteredLessonsQuery
-  
-    } = apiSlice;
+export const {
+    useLessonsQuery,
+    useLessonContentQuery,
+    useCreateLessonMutation,
+    useUpdateLessonMutation,
+    useRegisteredLessonsQuery,
+    useStudentsQuery,
+    useStudentDetailsQuery,
+    useCreateStudentMutation,
+    useMufredatlarQuery,
+    useUpdateStudentMutation,
+    useMufredatDerslerQuery,
+    useMufredatQuery,
+    useCreateMufredatMutation,
+    useUpdateMufredatMutation,
+    useUsersQuery,
+    useUserDetailsQuery,
+    useCreateUserMutation,
+    useUpdateUserMutation,
+    useDeleteUserMutation,
+    useProfileQuery
+
+} = apiSlice;
 

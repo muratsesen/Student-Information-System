@@ -3,33 +3,35 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchAllUsers } from "../features/user/userSlice";
 import { Button, Table } from "@mantine/core";
-import {useUsersQuery} from "../features/apiSlice"
+import { useMufredatlarQuery } from "../features/apiSlice"
 
 
-const Students = () => {
+const MufredatList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data:users,isSuccess:status, isError:error } = useUsersQuery();
+  const { data: mufredatlar, isError: error } = useMufredatlarQuery();
 
+  useEffect(() => {
+    dispatch(fetchAllUsers()).unwrap();
+  }, []);
 
-  const data = users?.map((user) => (
-    <tr key={user.id}>
-      <td>{user.id}</td>
+  const data = mufredatlar?.map((data) => (
+    <tr key={data.id}>
+      <td>{data.id}</td>
       <td>
-        <Link to={`/users/${user.id}`}>{user.ad} {user.soyad}</Link>
+        <Link to={`/new-mufredat/${data.id}`}>{data.name}</Link>
       </td>
-      <td>{user.type === 1 ? <span style={{color:"green"}}>Öğrenci</span> : <span style={{color:"red"}}>Admin</span>}</td>
       <td>
-        <Link to={`/users/${user.id}`}>Göster</Link>
+        <Link to={`/mufredat-lessons/${data.id}`}>Göster</Link>
       </td>
     </tr>
   ));
 
   return (
     <div>
-      <Button onClick={()=>navigate("/new-user")}>Yeni Kullanıcı Ekle</Button>
+      <Button onClick={() => navigate("/new-mufredat")}>Yeni Müfredat Ekle</Button>
       <br />
-        <br />
+      <br />
       {status === "pending" ? (
         <h1>Fetching...</h1>
       ) : error ? (
@@ -39,9 +41,8 @@ const Students = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Ad Soyad</th>
-              <th>Tipi</th>
-              <th>Detay</th>
+              <th>Adı</th>
+              <th>Ders Listesi</th>
             </tr>
           </thead>
           <tbody>{data}</tbody>
@@ -51,4 +52,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default MufredatList;

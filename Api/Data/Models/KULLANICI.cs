@@ -13,7 +13,7 @@ public class KULLANICI : BaseEntity, IEntity
     public string KULLANICI_ADI { get; set; }
     public string SIFRE { get; set; }
     public KULLANICI_TIPI TUR { get; set; }
-    public int KIMLIK_ID { get; set; }
+    public int KIMLIKID { get; set; }
 
     public KIMLIK KIMLIK { get; set; }
 

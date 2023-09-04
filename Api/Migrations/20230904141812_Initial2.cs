@@ -2,140 +2,112 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Api.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedOgrenci : Migration
+    public partial class Initial2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "OGRID",
+                table: "DERS_KAYIT");
+
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 1,
                 column: "SIFRE",
-                value: "$2b$12$A0/Da2pZ9Q1nK8PxmNE.eOhtF5EoOASpEwFQMZ5IDzXSFJhX6xraO");
+                value: "$2b$12$JyP3af4mbXhNCWniSle8muflL9.htgnJK9rnxY1kzAE1OfPJGGIPy");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 2,
                 column: "SIFRE",
-                value: "$2b$12$tePIobKfNk.GljatjJ/yi.j2p3/Bs0hzeSBIBiJNhbziZAjyF0Xnm");
+                value: "$2b$12$KTZPMT07r0MIrQb.Ur086.YLmgQPgeaFWwTufOEK9UQ.jc.HQkYHS");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 3,
                 column: "SIFRE",
-                value: "$2b$12$Yt8zrgVNQ3b1ZV/hQOHmqe9Z8fnYturztBIGaoMu5UxChMAEVfj9C");
+                value: "$2b$12$F9VwrpPrhyRlT17WY4gEHezSrLM.FXy7qBWMQksJPeiKgURScpE6O");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 4,
                 column: "SIFRE",
-                value: "$2b$12$lxdmgZeByc4RxkJ07OG2P.YFcrhiamG37XxPX9GiI40Qn256057Eu");
+                value: "$2b$12$ecVjOuJ2L1rDScWPYEAOyuv0YDq02G7n1344Y2fS3UlFP4F.EvKFC");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 5,
                 column: "SIFRE",
-                value: "$2b$12$VOoROXZcLC6XUsJyihmx9uuM8BSYPRbwLH1kqjU4nkYlPwHxLyCY.");
+                value: "$2b$12$6ajSEEkPVsCkedJBdJzciOjyOiK8gxGJKdWyw1OMeF.rc8jp5R7o2");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 6,
                 column: "SIFRE",
-                value: "$2b$12$U.2zJ8VvsgVxYCfGc.hzvOJXJlUsExy.RTc/4CqbsfjdIyVV4nrGm");
-
-            migrationBuilder.InsertData(
-                table: "OGRENCILER",
-                columns: new[] { "ID", "KIMLIK_ID", "MUFREDAT_ID", "OGR_NO" },
-                values: new object[,]
-                {
-                    { 1, 3, 1, 27482379 },
-                    { 2, 5, 1, 23462368 },
-                    { 3, 6, 2, 34565479 },
-                    { 4, 2, 2, 53456346 },
-                    { 5, 4, 3, 34674575 }
-                });
+                value: "$2b$12$otdvSUi2oUbSKmDSOuKHEO9nSqQ6UcDDvM02CzXatTOW1qNog.E5y");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "OGRENCILER",
-                keyColumn: "ID",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "OGRENCILER",
-                keyColumn: "ID",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "OGRENCILER",
-                keyColumn: "ID",
-                keyValue: 3);
-
-            migrationBuilder.DeleteData(
-                table: "OGRENCILER",
-                keyColumn: "ID",
-                keyValue: 4);
-
-            migrationBuilder.DeleteData(
-                table: "OGRENCILER",
-                keyColumn: "ID",
-                keyValue: 5);
+            migrationBuilder.AddColumn<int>(
+                name: "OGRID",
+                table: "DERS_KAYIT",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 1,
                 column: "SIFRE",
-                value: "$2b$12$OT0cEACtEvbguEu8.s.6Uuu.sK1C0MXcDiil5pvnSw1e6Kn0nSiyi");
+                value: "$2b$12$og.AAtMwOQSQHk1AfL7iZenMubvegdHu37H.ClMXYjPAIExwwFNXi");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 2,
                 column: "SIFRE",
-                value: "$2b$12$FlVTOE5NlkV5Yoy915xgMeHu3Ht96tllywnxhg9ba.zlq67KTWTC6");
+                value: "$2b$12$i05Fy0um0XF2gFiweWHXHe5a7gr8NlOTAxPPzwVSTKwQ3YChnU.7i");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 3,
                 column: "SIFRE",
-                value: "$2b$12$UpQS0hL.q3DG9R4csmvmzOCC8LhIrfQj77/XgCiIwqtGPcRaCzyDa");
+                value: "$2b$12$Jpb8tqvwinYdMGnhGFHU.umNL4xqHHlJ2QlLS3FM/IflbYIiCCpCy");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 4,
                 column: "SIFRE",
-                value: "$2b$12$m1vXmADnURuKELVuY14ZtOyMgdP74kZtZXP.MzdG17uyWIdJeO.h.");
+                value: "$2b$12$x3PRYpUcEb5K9SQbu03H3up1nFX3CCehu6OLJx/40Squhjv/2GpW2");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 5,
                 column: "SIFRE",
-                value: "$2b$12$a9O456JY/AL4jkwTUl/nEuJizrM6rqaXfj8rY3XVGBrVKlCDsLvGi");
+                value: "$2b$12$8WBzAMs/Ag18SCv/OFKFFOpMPeQHeHXGa2ZdAB9c3TiuSH79I94wi");
 
             migrationBuilder.UpdateData(
                 table: "KULLANICILAR",
                 keyColumn: "ID",
                 keyValue: 6,
                 column: "SIFRE",
-                value: "$2b$12$ZkciXLmX.pM6rNJ1ZN3ZBO.JGiPOZRhG2x4ljCqT4xYSMxSW5H38y");
+                value: "$2b$12$UVjz1Gj63bMnGkt.ZlPBletNGtqwmDsienn0PVXN/SnWPRoRNqx4C");
         }
     }
 }
