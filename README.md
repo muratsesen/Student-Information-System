@@ -1,9 +1,9 @@
-1- appsettings.json içinde 'connection string' verisini değiştirin.
+Database aktarımı için API/appsettings.json içinde 'connection string' verisini değiştirilmeli
 Ben postgresql kullandım. 
-2- Api projesine girip 
-    ``dotnet ef database update`` komutunu çalıştırın.
-3-  Swagger UI kapalı. Açmak için launchSettings dosyasında gerekli değişikliği yapabilirsiniz.
-4- Postman collection paylaşacağım.
+Swagger UI kapalı. Açmak için launchSettings dosyasında gerekli değişikliği yapabilirsiniz.
+Postman collection repo içinde var ancak UI tarafında gerekli implementasyonlar bulunmaktadır.
+
+Projeyi çalıştırmak için:
 
 1- ``git clone https://github.com/muratsesen/Student-Information-System.git``
 
