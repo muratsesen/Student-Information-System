@@ -35,7 +35,7 @@ const Home = () => {
     //   "sifre": password
     // });
    
-    fetch(`http://localhost:5249/Auth/giris`, {
+    fetch(`https://localhost:7277/Auth/giris`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

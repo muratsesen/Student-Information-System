@@ -33,7 +33,7 @@ const Profile = () => {
 
         <span className="text-blue-400 cursor-pointer "
           onClick={() => navigate("/edit-profile/")}>
-          Düzenle
+          İletişim Bilgileri Düzenle
         </span>
         <table className="min-w-full table-auto">
 

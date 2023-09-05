@@ -9,7 +9,7 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("users")]
-[Authorize(Policy = "AdminRole")]
+[Authorize]
 public class UserController : ControllerBase
 {
 
@@ -66,6 +66,46 @@ public class UserController : ControllerBase
 
 
         return Ok(kullanici);
+    }
+
+    [HttpGet("communication/{id}")]
+    [Authorize]
+    public IActionResult GetUserCommunicationDetail(int id)
+    {
+        var kullanici = context.KULLANICILAR.Where(u => u.ID == id)
+            .Include(k => k.KIMLIK).ThenInclude(k => k.ILETISIM).
+            Select(x => new
+            {
+                Id = x.ID,
+                Adres = x.KIMLIK.ILETISIM.ADRES,
+                Il = x.KIMLIK.ILETISIM.IL,
+                Ilce = x.KIMLIK.ILETISIM.ILCE,
+                Email = x.KIMLIK.ILETISIM.EMAIL,
+                Gsm = x.KIMLIK.ILETISIM.GSM,
+                IletisimId = x.KIMLIK.ILETISIMID,
+
+            })
+            .FirstOrDefault();
+        return Ok(kullanici);
+    }
+
+    [HttpPut("communication")]
+    [Authorize]
+    public IActionResult PutCommunication(KullaniciIletisimModel model)
+    {
+        var iletisim = context.ILETISIMLER.Where(u => u.ID == model.IletisimId).FirstOrDefault();
+
+        if (iletisim == null) return NotFound("Iletisim bulunamadı.");
+
+        iletisim.ADRES = model.Adres;
+        iletisim.IL = model.Il;
+        iletisim.ILCE = model.Ilce;
+        iletisim.EMAIL = model.Email;
+        iletisim.GSM = model.Gsm;
+
+        context.SaveChanges();
+
+        return Ok(iletisim);
     }
 
     [HttpPost]

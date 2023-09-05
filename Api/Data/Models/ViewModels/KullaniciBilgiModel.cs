@@ -19,5 +19,6 @@ namespace Api.Data.Models.ViewModels
         public DateTime DogumTarihi { get; set; }
 
     }
+
 }
 

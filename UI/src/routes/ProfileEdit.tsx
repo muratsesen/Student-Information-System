@@ -1,22 +1,19 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useProfileInfoQuery, useEditProfileMutation } from "../features/apiSlice";
+import ToastNotify from "../components/ToastNotify";
 
 const initialState = {
   ogrenciId: 0,
   mufredatId: 0,
   iletisimId: 0,
   kimlikId: 0,
-  ad: '',
-  soyad: '',
-  ogrenciNo: '',
+
   adres: '',
   il: '',
   ilce: '',
   email: '',
-  gsm: '',
-  tckNo: '',
-  dogumYeri: '',
-  dogumTarihi: '',
+  gsm: ''
 };
 
 const reducer = (state, action) => {
@@ -34,11 +31,46 @@ const ProfileEdit = () => {
   const id = localStorage.getItem("userId");
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const { data: userInfo, isError, isLoading } = useProfileInfoQuery({ id });
+  const [editProfile, { isSuccess }] = useEditProfileMutation();
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch({
+        type: 'setValues', payload: {
+          ogrenciId: userInfo.ogrenciId,
+          mufredatId: userInfo.mufredatId,
+          iletisimId: userInfo.iletisimId,
+          kimlikId: userInfo.kimlikId,
+
+          adres: userInfo.adres,
+          il: userInfo.il,
+          ilce: userInfo.ilce,
+          email: userInfo.email,
+          gsm: userInfo.gsm
+        }
+      })
+
+    }
+  }, [userInfo])
+
+  useEffect(() => {
+    if (isSuccess) {
+      ToastNotify("BİLGİLER KAYDEDILDI!");
+      navigate(-1);
+    }
+  }, [isSuccess])
+
+
   function handleChange(e) {
     const { name, value } = e.target;
     dispatch({ type: 'setValues', payload: { [name]: value } });
   }
-
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(state);
+    editProfile(state);
+  }
   return (
     <div>
 
@@ -48,7 +80,7 @@ const ProfileEdit = () => {
 
       <br />
 
-      <form >
+      <form onSubmit={handleSubmit}>
 
         <div>
           <label>

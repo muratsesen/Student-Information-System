@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const baseUrl = "http://localhost:5249/" //!! Home içinde de değiştir.
+const baseUrl = "https://localhost:7277/" //!! Home içinde de değiştir.
+//const baseUrl = "http://localhost:5249/" //!! Home içinde de değiştir.
 //TODO:centerilize token
 function getToken() {
     let token = localStorage.getItem('token');
@@ -172,6 +173,19 @@ export const apiSlice = createApi({
                 method: "get",
             })
         }),
+        profileInfo: builder.query({
+            query: (data) => ({
+                url: `users/communication/${data.id}`,
+                method: "get",
+            })
+        }),
+        editProfile: builder.mutation({
+            query: (data) => ({
+                url: `users/communication`,
+                method: "put",
+                body:data
+            })
+        })
 
         
     })
@@ -199,7 +213,9 @@ export const {
     useCreateUserMutation,
     useUpdateUserMutation,
     useDeleteUserMutation,
-    useProfileQuery
+    useProfileQuery,
+    useProfileInfoQuery,
+    useEditProfileMutation
 
 } = apiSlice;
 
