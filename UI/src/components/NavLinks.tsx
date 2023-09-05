@@ -107,7 +107,7 @@ const NavLinks = () => {
                           : "text-gray-400"
                     }
                   >
-                    <Text>TÜM DERSLER</Text>
+                    <Text>MÜFREDATIMDAKİ DERSLER</Text>
                   </NavLink>
                   <NavLink
                     to="profile"

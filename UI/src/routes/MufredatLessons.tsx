@@ -24,7 +24,6 @@ const MufredatLessons = () => {
   },[isSuccess]);
 
  let registeredLessonIds = refisteredLessons?.length > 0 ? refisteredLessons?.map((lesson) => (lesson.id)):[];
-  console.log(registeredLessonIds);
 
   const data =lessons?.length > 0 ? lessons?.map((lesson) => (
     <tr key={lesson.id}>
