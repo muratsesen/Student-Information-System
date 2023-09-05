@@ -104,7 +104,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "mufredat-lessons/:id",
+        path: "mufredat-lessons",
         element: (
           <Protected>
             <MufredatLessons />

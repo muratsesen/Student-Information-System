@@ -7,7 +7,7 @@ import {useMufredatDerslerQuery} from "../features/apiSlice"
 
 
 const MufredatLessons = () => {
-  const { id } = useParams();
+  const  id  = localStorage.getItem("mufredatId");
   const navigate = useNavigate();
   console.log(id);
  

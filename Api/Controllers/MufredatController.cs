@@ -142,7 +142,7 @@ public class MufredatController : ControllerBase
     }
 
     [HttpGet("dersler/{mufredat_id}")]
-    [Authorize(Policy = "AdminRole")]
+    [Authorize]
     public IActionResult GetLessonList(int mufredat_id)
     {
         var data = context.MUFREDAT_DERSLER
