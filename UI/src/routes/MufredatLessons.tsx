@@ -2,22 +2,26 @@ import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchAllUsers } from "../features/user/userSlice";
-import { Table } from "@mantine/core";
-import {useMufredatDerslerQuery} from "../features/apiSlice"
+import { Button, Table } from "@mantine/core";
+import {useMufredatDerslerQuery,useRegisterLessonsMutation} from "../features/apiSlice"
 
 
 const MufredatLessons = () => {
   const  id  = localStorage.getItem("mufredatId");
+  let ogrenciId = localStorage.getItem("ogrenciId");
+
   const navigate = useNavigate();
-  console.log(id);
  
   const { data: lessons, isError ,isLoading } = useMufredatDerslerQuery({id});
-   console.log(lessons);
+  const [registerLesson,{isSuccess}] = useRegisterLessonsMutation();
 
   const data =lessons?.length > 0 ? lessons?.map((lesson) => (
     <tr key={lesson.id}>
       <td>{lesson.id}</td>
       <td>{lesson.name}</td>
+      <td>
+        <Button onClick={() => registerLesson({ogrenciId,dersId:lesson.id})}>Kaydol</Button>
+      </td>
     </tr>
   )): (<tr> <td colSpan={2}>Henüz ders kaydı yok</td> </tr>);
 
@@ -37,6 +41,7 @@ const MufredatLessons = () => {
             <tr>
               <th>ID</th>
               <th>Ders Adı</th>
+              <th>Kayıt Durumu</th>
             </tr>
           </thead>
           <tbody>{data}</tbody>

@@ -61,6 +61,13 @@ export const apiSlice = createApi({
                 method: "get",
             })
         }),
+        registerLessons: builder.mutation({
+            query: (data) => ({
+                url: `derskayit/kayit`,
+                method: "post",
+                body:data
+            })
+        }),
         students: builder.query({
             query: (data) => ({
                 url: `ogrenci/ogrenciler`,
@@ -169,6 +176,7 @@ export const {
     useCreateLessonMutation,
     useUpdateLessonMutation,
     useRegisteredLessonsQuery,
+    useRegisterLessonsMutation,
     useStudentsQuery,
     useStudentDetailsQuery,
     useCreateStudentMutation,
