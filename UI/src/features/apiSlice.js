@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const baseUrl = "https://localhost:7277/"
+const baseUrl = "http://localhost:5249/" //!! Home içinde de değiştir.
 //TODO:centerilize token
 function getToken() {
     let token = localStorage.getItem('token');
@@ -29,6 +29,13 @@ export const apiSlice = createApi({
     tagTypes: [],
     refetchOnMountOrArgChange: true,
     endpoints: builder => ({
+        login: builder.mutation({
+            query: (data) => ({
+                url: `Auth/giris`,
+                method: "post",
+                body:data
+            })
+        }),
         lessons: builder.query({
             query: (data) => ({
                 url: `ders/dersler`,
@@ -171,6 +178,7 @@ export const apiSlice = createApi({
 })
 
 export const {
+    useLoginMutation,
     useLessonsQuery,
     useLessonContentQuery,
     useCreateLessonMutation,

@@ -5,3 +5,6 @@ Ben postgresql kullandım.
 3-  Swagger UI kapalı. Açmak için launchSettings dosyasında gerekli değişikliği yapabilirsiniz.
 4- Postman collection paylaşacağım.
 
+1- git clone https://github.com/muratsesen/Student-Information-System.git
+2-  cd Student-Information-System
+3- 
