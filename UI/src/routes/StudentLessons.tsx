@@ -7,7 +7,7 @@ import {useRegisteredLessonsQuery} from "../features/apiSlice"
 
 
 const StudentLessons = () => {
-  const { id } = useParams();
+let id = localStorage.getItem("ogrenciId")
   console.log(id);
  
   const { data: lessons, isError ,isLoading } = useRegisteredLessonsQuery({id});
