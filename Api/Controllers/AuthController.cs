@@ -134,7 +134,6 @@ public class AuthController : ControllerBase
         {
                 new Claim(JwtRegisteredClaimNames.Sub, user.KULLANICI_ADI),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.GivenName, user.ID.ToString()),
         };
 

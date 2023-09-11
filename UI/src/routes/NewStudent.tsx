@@ -37,11 +37,15 @@ const NewStudent = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [createUser] = useCreateStudentMutation();//, { isLoading, isSuccess, isError, error }
+  const [createUser,{isSuccess:studentCreated}] = useCreateStudentMutation();//, { isLoading, isSuccess, isError, error }
   const [updateUser] = useUpdateStudentMutation();
   const { data: mufredatlar } = useMufredatlarQuery();
   const { data: user, isError, isLoading,isSuccess } = useStudentDetailsQuery({ id });
-
+useEffect(() => {
+  if(studentCreated){
+    navigate(-1);
+  }
+},[studentCreated]);
   useEffect(() => {
     if (isSuccess && user) {
       // Set initial state values when user data is available
@@ -163,7 +167,9 @@ return (
           onChange={handleChange}
         >
           {mufredatlar?.map((mufredat) => (
-            <option key={mufredat.id} value={mufredat.id}>{mufredat.mufredaT_ADI}</option>
+            <option 
+            key={mufredat.id} 
+            value={mufredat.id}>{mufredat.name}</option>
           ))
           }
         </select>

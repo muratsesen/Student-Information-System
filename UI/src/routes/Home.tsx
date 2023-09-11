@@ -35,34 +35,68 @@ const Home = () => {
     //   "sifre": password
     // });
 
-    fetch(`${import.meta.env.VITE_API_URL}Auth/giris`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        "kullanicI_ADI": username,
-        "sifre": password
-      })
+try {
+  fetch(`${import.meta.env.VITE_API_URL}Auth/giris`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify({
+      "kullanicI_ADI": username,
+      "sifre": password
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("ogrenciId", data.ogrenciId);
-        localStorage.setItem("mufredatId", data.mufredatId);
-        localStorage.setItem("userId", data.userId);
-        dispatch(login({ userType: data.userType, token: data.token }));
+  })
+    .then((res) => 
+    {
+      if(res.status === 401){
+        ToastNotify("Kullanıcı adı veya şifre hatalı!")
+        return
+      }
+      if(res.status === 404){
+        ToastNotify("Kullanıcı adı veya şifre hatalı!")
+        return
+      }
+      if(res.status === 500){
+        ToastNotify("Kullanıcı adı veya şifre hatalı!")
+        return
+      }
+      if(res.status === 403){
+        ToastNotify("Kullanıcı adı veya şifre hatalı!")
+        return
+      }
+      if(res.status === 400){
+        ToastNotify("Kullanıcı adı veya şifre hatalı!")
+        return
+      }
+      if(res.status === 200){
+        ToastNotify("Başarılı bir şekilde giriş yaptınız!")
+      }
 
-      });
+      console.log("res:",res)
+      res.json()
+    }
+   )
+    .then((data) => {
+      console.log(data)
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("ogrenciId", data.ogrenciId);
+      localStorage.setItem("mufredatId", data.mufredatId);
+      localStorage.setItem("userId", data.userId);
+      dispatch(login({ userType: data.userType, token: data.token }));
+
+    });
+} catch (error) {
+  console.log(error)
+}
 
     // ToastNotify("Successfully logged in");
   };
 
   async function getUserInfo() {
-    fetch("https://localhost:7277/Auth/info", {
+    try {
+      fetch("https://localhost:7277/Auth/info", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +109,9 @@ const Home = () => {
         console.log(data);
         // dispatch(login({ userType: data.userType, token: data.token }));
       });
+    } catch (error) {
+      
+    }
   }
 
   return (

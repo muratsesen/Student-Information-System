@@ -20,6 +20,7 @@ import Students from "./routes/Students";
 import StudentDetails from "./routes/StudentDetails";
 import Profile from "./routes/Profile";
 import ProfileEdit from "./routes/ProfileEdit";
+import NewStudent from "./routes/NewStudent";
 const Users = lazy(() => import("./routes/Users"));
 const UserDetails = lazy(() => import("./routes/UserDetails"));
 const Home = lazy(() => import("./routes/Home"));
@@ -140,6 +141,14 @@ const router = createBrowserRouter([
         element: (
           <AdminOnly>
             <NewUser />
+          </AdminOnly>
+        ),
+      },
+      {
+        path: "new-student",
+        element: (
+          <AdminOnly>
+            <NewStudent />
           </AdminOnly>
         ),
       },

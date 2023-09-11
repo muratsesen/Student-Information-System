@@ -29,7 +29,7 @@ const Students = () => {
 
   return (
     <div>
-      <Button onClick={()=>navigate("/new-user")}>Yeni Öğrenci Ekle</Button>
+      <Button onClick={()=>navigate("/new-student")}>Yeni Öğrenci Ekle1</Button>
       <br />
         <br />
       {status === "pending" ? (

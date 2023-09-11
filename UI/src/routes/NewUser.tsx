@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useReducer } from "react";
-import { useCreateStudentMutation,useUpdateStudentMutation,useMufredatlarQuery,useStudentDetailsQuery } from "../features/apiSlice";
+import { useCreateUserMutation,useUpdateStudentMutation,useMufredatlarQuery,useStudentDetailsQuery } from "../features/apiSlice";
 
 
 const initialState = {
@@ -37,7 +37,7 @@ const NewUser = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [createUser] = useCreateStudentMutation();//, { isLoading, isSuccess, isError, error }
+  const [createUser] = useCreateUserMutation();//, { isLoading, isSuccess, isError, error }
   const [updateUser] = useUpdateStudentMutation();
   const { data: mufredatlar } = useMufredatlarQuery();
   const { data: user, isError, isLoading,isSuccess } = useStudentDetailsQuery({ id });
@@ -73,7 +73,7 @@ const NewUser = () => {
   
 return (
     <div>
-      {id ? <h1> Öğrenci Düzenle </h1> : <h1> Yeni Öğrenci </h1>}
+      {id ? <h1> Kullanıc Düzenle </h1> : <h1> Yeni Kullanıcı </h1>}
       <p className="text-blue-400 cursor-pointer" onClick={() => navigate(-1)}>
         Geri dön
       </p>
@@ -157,16 +157,7 @@ return (
           value={formatDate(state.dogumTarihi)}
           onChange={handleChange}
         />
-        <select
-          name="mufredatId"
-          value={state.mufredatId}
-          onChange={handleChange}
-        >
-          {mufredatlar?.map((mufredat) => (
-            <option key={mufredat.id} value={mufredat.id}>{mufredat.mufredaT_ADI}</option>
-          ))
-          }
-        </select>
+  
         <br />
         <br />
         <button type="submit">Kaydet</button>
