@@ -34,8 +34,8 @@ const Home = () => {
     //   "kullanicI_ADI": username,
     //   "sifre": password
     // });
-   
-    fetch(`https://localhost:7277/Auth/giris`, {
+
+    fetch(`${import.meta.env.VITE_API_URL}Auth/giris`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
