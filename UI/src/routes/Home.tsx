@@ -26,7 +26,7 @@ const Home = () => {
   //       dispatch(login({ userType: loginData.userType, token: loginData.token }));
   //   }
   //     console.log(loginData)
-    
+
   // } , [ isSuccessLogin])
 
   const handleLogin = async (username: string, password: string) => {
@@ -40,7 +40,6 @@ const Home = () => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
@@ -69,7 +68,6 @@ const Home = () => {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Origin": "*",
       }
     })
       .then((res) => res.json())
@@ -81,9 +79,7 @@ const Home = () => {
 
   return (
     <div>
-      {isAuth ? (
-        <Button onClick={() => dispatch(logout())}>Çıkış</Button>
-      ) : (
+      {!isAuth && (
         <Login handleLogin={handleLogin} />
       )}
       <Suspense fallback={<p>Loading...</p>}>
@@ -99,8 +95,17 @@ function Login({ handleLogin }) {
   return (
     <div>
       {/* username and password */}
-      <input ref={usernameRef} type="text" placeholder="Kullanıcı Adı" />
-      <input ref={passwordRef} type="password" placeholder="Şifre" />
+      <label htmlFor="username" className="mt-2 mb-2 block text-sm font-medium text-gray-700">
+        Kullanıcı Adı
+        <br />
+        <input ref={usernameRef} type="text" placeholder="Kullanıcı Adı" />
+      </label>
+
+      <label htmlFor="password" className="mt-2 mb-2 block text-sm font-medium text-gray-700">
+        Şifre
+        <br />
+        <input ref={passwordRef} type="password" placeholder="Şifre" />
+      </label>
       <Button variant="gradient" onClick={() => handleLogin(usernameRef.current.value, passwordRef.current.value)} style={{ marginTop: "10px" }}>
         Giriş Yap
       </Button>
